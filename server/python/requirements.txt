@@ -1,4 +1,4 @@
-deephaven-core==0.15.0
+deephaven-core==0.15.1
 deephaven-plugin==0.2.0
 importlib-metadata==4.12.0
 jpy==0.11.0
