@@ -57,13 +57,19 @@ variable "CACHE_PREFIX" {
     default = "deephaven-server-docker-"
 }
 
-# Note: when updating DEEPHAVEN_VERSION, we should update requirements.txt.
+// Note: when updating DEEPHAVEN_VERSION, we should update requirements.txt.
 variable "DEEPHAVEN_VERSION" {
     default = "0.16.1"
 }
 
 variable "DEEPHAVEN_SHA256SUM" {
     default = "4a0f73dbed9ede52353dd0b689e1019575278a1741221c7d81b379c460158334"
+}
+
+variable "SERVER_SCRATCH_TARGET" {
+    default = "server-scratch"
+    // See directions in DEVELOPMENT.md
+    // default = "server-scratch-local"
 }
 
 # -------------------------------------
@@ -73,7 +79,7 @@ target "server-scratch" {
     tags = [
         "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-scratch"
     ]
-    target = "server-scratch"
+    target = "${SERVER_SCRATCH_TARGET}"
     args = {
         "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"

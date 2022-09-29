@@ -40,10 +40,10 @@ RUN set -eux; \
         python${PYTHON_VERSION} \
         python${PYTHON_VERSION}-venv; \
     rm -rf /var/lib/apt/lists/*
-RUN --mount=type=bind,source=./python/requirements.txt,target=./python/requirements.txt \
+RUN --mount=type=bind,source=./python/requirements,target=./python/requirements \
     set -eux; \
     python${PYTHON_VERSION} -m venv ${DEEPHAVEN_HOME}/venv; \
-    ${DEEPHAVEN_HOME}/venv/bin/pip install --no-cache-dir -r ./python/requirements.txt
+    ${DEEPHAVEN_HOME}/venv/bin/pip install --no-cache-dir -r ./python/requirements/requirements.txt
 ENV VIRTUAL_ENV="${DEEPHAVEN_HOME}/venv" \
     PATH="${DEEPHAVEN_HOME}/venv/bin:${PATH}"
 # TODO: add requirements.txt into .tar, or as separate release artifact?
