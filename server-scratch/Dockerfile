@@ -16,8 +16,13 @@ RUN set -eux; \
 # ----------------------------------------------------------------------------
 
 FROM scratch as server-scratch
+ARG DEEPHAVEN_VERSION
+ARG DEEPHAVEN_SHA256SUM
 ARG DEEPHAVEN_HOME=/opt/deephaven
 COPY --link --from=untarred ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
+    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}"
 
 # ----------------------------------------------------------------------------
 #
@@ -40,7 +45,12 @@ RUN set -eux; \
 # ----------------------------------------------------------------------------
 
 FROM scratch as server-scratch-local
+ARG DEEPHAVEN_VERSION
+ARG DEEPHAVEN_SHA256SUM
 ARG DEEPHAVEN_HOME=/opt/deephaven
 COPY --link --from=untarred-local ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
+    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}"
 
 # ----------------------------------------------------------------------------

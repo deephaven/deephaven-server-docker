@@ -131,6 +131,10 @@ target "server-contexts" {
     contexts = {
         server-scratch = "target:server-scratch"
     }
+    args = {
+        "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
+        "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
+    }
 }
 
 target "groovy-11" {
@@ -292,6 +296,10 @@ target "generic-contexts" {
     context = "server-generic/"
     contexts = {
         server-scratch = "target:server-scratch"
+    }
+    args = {
+        "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
+        "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
     }
 }
 

@@ -55,6 +55,8 @@ FROM --platform=linux/amd64 server-scratch as server-scratch-amd64
 # -------------------------------------
 
 FROM base as groovy
+ARG DEEPHAVEN_VERSION
+ARG DEEPHAVEN_SHA256SUM
 COPY --link --from=openjdk ${JAVA_HOME} ${JAVA_HOME}
 COPY --link --from=server-scratch-amd64 ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
 COPY --link groovy/image-bootstrap.properties ${DEEPHAVEN_HOME}/config/image-bootstrap.properties
@@ -62,10 +64,15 @@ VOLUME /data
 VOLUME /cache
 EXPOSE 10000
 ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/image-bootstrap.properties"]
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
+    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}"
 
 # -------------------------------------
 
 FROM python-base as python
+ARG DEEPHAVEN_VERSION
+ARG DEEPHAVEN_SHA256SUM
 COPY --link --from=openjdk ${JAVA_HOME} ${JAVA_HOME}
 COPY --link --from=server-scratch-amd64 ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
 COPY --link python/image-bootstrap.properties ${DEEPHAVEN_HOME}/config/image-bootstrap.properties
@@ -73,5 +80,8 @@ VOLUME /data
 VOLUME /cache
 EXPOSE 10000
 ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/image-bootstrap.properties"]
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
+    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}"
 
 # -------------------------------------
