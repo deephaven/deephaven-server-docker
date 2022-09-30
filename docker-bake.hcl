@@ -23,19 +23,19 @@ group "all" {
         // Explicit JDK and Python versions
         "groovy-11",
         "groovy-17",
-        "groovy-18",
+        "groovy-19",
         "python-11-38",
         "python-11-39",
         "python-11-310",
         "python-17-38",
         "python-17-39",
         "python-17-310",
-        "python-18-38",
-        "python-18-39",
-        "python-18-310",
+        "python-19-38",
+        "python-19-39",
+        "python-19-310",
 
         // Generic servers
-        "zulu-18",
+        "zulu-19",
         "zulu-17",
         "zulu-11",
         "graal-ol8-17",
@@ -157,15 +157,15 @@ target "groovy-17" {
     }
 }
 
-target "groovy-18" {
+target "groovy-19" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-18"
+        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19"
     ]
     target = "groovy"
     args = {
         "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "18"
+        "OPENJDK_VERSION" = "19"
     }
 }
 
@@ -247,41 +247,41 @@ target "python-17-310" {
     }
 }
 
-target "python-18-38" {
+target "python-19-38" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-18-38"
+        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19-38"
     ]
     target = "python"
     args = {
         "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "18"
+        "OPENJDK_VERSION" = "19"
         "PYTHON_VERSION" = "3.8"
     }
 }
 
-target "python-18-39" {
+target "python-19-39" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-18-39"
+        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19-39"
     ]
     target = "python"
     args = {
         "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "18"
+        "OPENJDK_VERSION" = "19"
         "PYTHON_VERSION" = "3.9"
     }
 }
 
-target "python-18-310" {
+target "python-19-310" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-18-310"
+        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19-310"
     ]
     target = "python"
     args = {
         "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "18"
+        "OPENJDK_VERSION" = "19"
         "PYTHON_VERSION" = "3.10"
     }
 }
@@ -295,13 +295,13 @@ target "generic-contexts" {
     }
 }
 
-target "zulu-18" {
+target "zulu-19" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-zulu-18"
+        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-zulu-19"
     ]
     args = {
-        "GENERIC_JAVA_BASE" = "azul/zulu-openjdk:18"
+        "GENERIC_JAVA_BASE" = "azul/zulu-openjdk:19"
     }
 }
 
