@@ -1,0 +1,3 @@
+deephaven-core==0.16.1
+tensorflow
+tensorboard

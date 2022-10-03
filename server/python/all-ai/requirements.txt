@@ -1,0 +1,5 @@
+deephaven-core==0.16.1
+nltk
+tensorflow
+torch
+scikit-learn
