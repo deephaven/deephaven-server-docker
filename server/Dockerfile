@@ -43,6 +43,7 @@ RUN set -eux; \
 RUN --mount=type=bind,source=./python/requirements,target=./python/requirements \
     set -eux; \
     python${PYTHON_VERSION} -m venv ${DEEPHAVEN_HOME}/venv; \
+    ${DEEPHAVEN_HOME}/venv/bin/pip install --no-cache-dir --upgrade pip setuptools; \
     ${DEEPHAVEN_HOME}/venv/bin/pip install --no-cache-dir -r ./python/requirements/requirements.txt
 ENV VIRTUAL_ENV="${DEEPHAVEN_HOME}/venv" \
     PATH="${DEEPHAVEN_HOME}/venv/bin:${PATH}"
