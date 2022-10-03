@@ -14,4 +14,9 @@ ENV DEEPHAVEN_HOME=${DEEPHAVEN_HOME}
 ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/image-bootstrap.properties"]
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
-    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}"
+    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}" \
+    io.deephaven.image.type="server" \
+    org.opencontainers.image.vendor="Deephaven Data Labs" \
+    org.opencontainers.image.title="Deephaven Server" \
+    org.opencontainers.image.description="Deephaven Server" \
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0"

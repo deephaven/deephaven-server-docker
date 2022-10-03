@@ -22,7 +22,12 @@ ARG DEEPHAVEN_HOME=/opt/deephaven
 COPY --link --from=untarred ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
-    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}"
+    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}" \
+    io.deephaven.image.type="server-scratch" \
+    org.opencontainers.image.vendor="Deephaven Data Labs" \
+    org.opencontainers.image.title="Deephaven Server Scratch" \
+    org.opencontainers.image.description="Deephaven Server Scratch" \
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0"
 
 # ----------------------------------------------------------------------------
 #
@@ -51,6 +56,11 @@ ARG DEEPHAVEN_HOME=/opt/deephaven
 COPY --link --from=untarred-local ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
-    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}"
+    io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}" \
+    io.deephaven.image.type="server-scratch" \
+    org.opencontainers.image.vendor="Deephaven Data Labs" \
+    org.opencontainers.image.title="Deephaven Server Scratch" \
+    org.opencontainers.image.description="Deephaven Server Scratch" \
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0"
 
 # ----------------------------------------------------------------------------
