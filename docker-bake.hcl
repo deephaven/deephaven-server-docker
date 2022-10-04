@@ -20,11 +20,11 @@ group "release" {
         "server-scratch-release",
         "server-groovy-release",
         "server-python-release",
-        // "python-all-ai-release",
-        // "python-nltk-release",
-        // "python-pytorch-release",
-        // "python-sklearn-release",
-        // "python-tensorflow-release",
+        "python-all-ai-release",
+        "python-nltk-release",
+        "python-pytorch-release",
+        "python-sklearn-release",
+        "python-tensorflow-release",
     ]
 }
 
@@ -390,7 +390,7 @@ target "graal-ol8-11" {
 target "python-all-ai" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-python-all-ai:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-all-ai:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -404,7 +404,7 @@ target "python-all-ai" {
 target "python-nltk" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-python-nltk:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-nltk:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -418,7 +418,7 @@ target "python-nltk" {
 target "python-pytorch" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-python-pytorch:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-pytorch:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -432,7 +432,7 @@ target "python-pytorch" {
 target "python-sklearn" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-python-sklearn:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-sklearn:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -446,7 +446,7 @@ target "python-sklearn" {
 target "python-tensorflow" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-python-tensorflow:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-tensorflow:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
