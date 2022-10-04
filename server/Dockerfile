@@ -73,7 +73,7 @@ ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/imag
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
     io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}" \
-    io.deephaven.image.type="server" \
+    io.deephaven.image.type="server-slim" \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.title="Deephaven Server" \
     org.opencontainers.image.description="Deephaven Server" \
