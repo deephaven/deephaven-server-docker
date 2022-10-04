@@ -100,7 +100,8 @@ variable "SERVER_SCRATCH_TARGET" {
 target "server-scratch" {
     context = "server-scratch/"
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-scratch:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-scratch:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}-scratch:latest"
     ]
     target = "${SERVER_SCRATCH_TARGET}"
     args = {
@@ -112,14 +113,16 @@ target "server-scratch" {
 target "server-groovy" {
     inherits = [ "groovy-17" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-slim:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-slim:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}-slim:latest"
     ]
 }
 
 target "server-python" {
     inherits = [ "python-17-310" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}:latest"
     ]
 }
 
@@ -390,7 +393,8 @@ target "graal-ol8-11" {
 target "python-all-ai" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-all-ai:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-all-ai:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}-all-ai:latest"
     ]
     target = "python"
     args = {
@@ -404,7 +408,8 @@ target "python-all-ai" {
 target "python-nltk" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-nltk:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-nltk:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}-nltk:latest"
     ]
     target = "python"
     args = {
@@ -418,7 +423,8 @@ target "python-nltk" {
 target "python-pytorch" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-pytorch:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-pytorch:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}-pytorch:latest"
     ]
     target = "python"
     args = {
@@ -432,7 +438,8 @@ target "python-pytorch" {
 target "python-sklearn" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-sklearn:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-sklearn:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}-sklearn:latest"
     ]
     target = "python"
     args = {
@@ -446,7 +453,8 @@ target "python-sklearn" {
 target "python-tensorflow" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-tensorflow:${DEEPHAVEN_VERSION}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-tensorflow:${DEEPHAVEN_VERSION}",
+        "${REPO_PREFIX}${IMAGE_PREFIX}-tensorflow:latest"
     ]
     target = "python"
     args = {
