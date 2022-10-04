@@ -1,4 +1,4 @@
-deephaven-core==0.16.1
+deephaven-core==0.17.0
 nltk
 tensorflow
 torch

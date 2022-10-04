@@ -72,7 +72,7 @@ variable "REPO_PREFIX" {
     default = "deephaven/"
 }
 
-variable "IMAGE_NAME" {
+variable "IMAGE_PREFIX" {
     default = "server"
 }
 
@@ -82,11 +82,11 @@ variable "CACHE_PREFIX" {
 
 // Note: when updating DEEPHAVEN_VERSION, we should update requirements.txt.
 variable "DEEPHAVEN_VERSION" {
-    default = "0.16.1"
+    default = "0.17.0"
 }
 
 variable "DEEPHAVEN_SHA256SUM" {
-    default = "4a0f73dbed9ede52353dd0b689e1019575278a1741221c7d81b379c460158334"
+    default = "e9dc4fe64d5a0e6d78f41670d5111239a412d787019be161700521e7f7e9c9a1"
 }
 
 variable "SERVER_SCRATCH_TARGET" {
@@ -100,7 +100,7 @@ variable "SERVER_SCRATCH_TARGET" {
 target "server-scratch" {
     context = "server-scratch/"
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-scratch"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-scratch:${DEEPHAVEN_VERSION}"
     ]
     target = "${SERVER_SCRATCH_TARGET}"
     args = {
@@ -112,14 +112,14 @@ target "server-scratch" {
 target "server-groovy" {
     inherits = [ "groovy-17" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-groovy"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-slim:${DEEPHAVEN_VERSION}"
     ]
 }
 
 target "server-python" {
     inherits = [ "python-17-310" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-python"
+        "${REPO_PREFIX}${IMAGE_PREFIX}:${DEEPHAVEN_VERSION}"
     ]
 }
 
@@ -163,7 +163,7 @@ target "server-contexts" {
 target "groovy-11" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-11"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-11:${DEEPHAVEN_VERSION}"
     ]
     target = "groovy"
     args = {
@@ -175,7 +175,7 @@ target "groovy-11" {
 target "groovy-17" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-17"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-17:${DEEPHAVEN_VERSION}"
     ]
     target = "groovy"
     args = {
@@ -187,7 +187,7 @@ target "groovy-17" {
 target "groovy-19" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-19:${DEEPHAVEN_VERSION}"
     ]
     target = "groovy"
     args = {
@@ -199,7 +199,7 @@ target "groovy-19" {
 target "python-11-38" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-11-38"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-38:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -213,7 +213,7 @@ target "python-11-38" {
 target "python-11-39" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-11-39"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-39:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -227,7 +227,7 @@ target "python-11-39" {
 target "python-11-310" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-11-310"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-310:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -241,7 +241,7 @@ target "python-11-310" {
 target "python-17-38" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-17-38"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-38:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -255,7 +255,7 @@ target "python-17-38" {
 target "python-17-39" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-17-39"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-39:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -269,7 +269,7 @@ target "python-17-39" {
 target "python-17-310" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-17-310"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-310:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -283,7 +283,7 @@ target "python-17-310" {
 target "python-19-38" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19-38"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-38:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -297,7 +297,7 @@ target "python-19-38" {
 target "python-19-39" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19-39"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-39:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -311,7 +311,7 @@ target "python-19-39" {
 target "python-19-310" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-19-310"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-310:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -338,7 +338,7 @@ target "generic-contexts" {
 target "zulu-19" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-zulu-19"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-zulu-19:${DEEPHAVEN_VERSION}"
     ]
     args = {
         "GENERIC_JAVA_BASE" = "azul/zulu-openjdk:19"
@@ -348,7 +348,7 @@ target "zulu-19" {
 target "zulu-17" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-zulu-17"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-zulu-17:${DEEPHAVEN_VERSION}"
     ]
     args = {
         "GENERIC_JAVA_BASE" = "azul/zulu-openjdk:17"
@@ -358,7 +358,7 @@ target "zulu-17" {
 target "zulu-11" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-zulu-11"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-zulu-11:${DEEPHAVEN_VERSION}"
     ]
     args = {
         "GENERIC_JAVA_BASE" = "azul/zulu-openjdk:11"
@@ -368,7 +368,7 @@ target "zulu-11" {
 target "graal-ol8-17" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-graal-ol8-17"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-graal-ol8-17:${DEEPHAVEN_VERSION}"
     ]
     args = {
         "GENERIC_JAVA_BASE" = "ghcr.io/graalvm/jdk:ol8-java17"
@@ -378,7 +378,7 @@ target "graal-ol8-17" {
 target "graal-ol8-11" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-graal-ol8-11"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-graal-ol8-11:${DEEPHAVEN_VERSION}"
     ]
     args = {
         "GENERIC_JAVA_BASE" = "ghcr.io/graalvm/jdk:ol8-java11"
@@ -390,7 +390,7 @@ target "graal-ol8-11" {
 target "python-all-ai" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-all-ai"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-all-ai:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -404,7 +404,7 @@ target "python-all-ai" {
 target "python-nltk" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-nltk"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-nltk:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -418,7 +418,7 @@ target "python-nltk" {
 target "python-pytorch" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-pytorch"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-pytorch:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -432,7 +432,7 @@ target "python-pytorch" {
 target "python-sklearn" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-sklearn"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-sklearn:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
@@ -446,7 +446,7 @@ target "python-sklearn" {
 target "python-tensorflow" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_NAME}:${DEEPHAVEN_VERSION}-tensorflow"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-tensorflow:${DEEPHAVEN_VERSION}"
     ]
     target = "python"
     args = {
