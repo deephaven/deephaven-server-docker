@@ -20,11 +20,11 @@ group "release" {
         "server-scratch-release",
         "server-groovy-release",
         "server-python-release",
-        "python-all-ai-release",
-        "python-nltk-release",
-        "python-pytorch-release",
-        "python-sklearn-release",
-        "python-tensorflow-release",
+        // "python-all-ai-release",
+        // "python-nltk-release",
+        // "python-pytorch-release",
+        // "python-sklearn-release",
+        // "python-tensorflow-release",
     ]
 }
 
