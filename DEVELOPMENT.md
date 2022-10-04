@@ -15,11 +15,11 @@ In this repository:
 
 ```shell
 cp <deephaven-core>/server/jetty-app/build/distributions/server-jetty-<version>.tar server-scratch/
-cp <deephaven-core>/docker/server/src/main/server/requirements.txt server/python/requirements/
-cp <deephaven-core>/py/server/build/wheel/deephaven_core-<version>-py3-none-any.whl server/python/requirements/
+cp <deephaven-core>/docker/server/src/main/server/requirements.txt server/python/base/
+cp <deephaven-core>/py/server/build/wheel/deephaven_core-<version>-py3-none-any.whl server/python/base/
 ```
 
-Add `deephaven-core @ file:///python/requirements/deephaven_core-<version>-py3-none-any.whl` to [server/python/requirements/requirements.txt](server/python/requirements/requirements.txt).
+Add `deephaven-core @ file:///requirements/deephaven_core-<version>-py3-none-any.whl` to [server/python/base/requirements.txt](server/python/base/requirements.txt).
 
 Edit the [docker-bake.hcl](./docker-bake.hcl) variables `DEEPHAVEN_VERSION` and `DEEPHAVEN_SHA256SUM` as appropriate, and change `SERVER_SCRATCH_TARGET` to "server-scratch-local".
 
