@@ -55,7 +55,14 @@ group "all" {
         "zulu-17",
         "zulu-11",
         "graal-ol8-17",
-        "graal-ol8-11"
+        "graal-ol8-11",
+
+        // Extras
+        "python-all-ai",
+        "python-nltk",
+        "python-pytorch",
+        "python-sklearn",
+        "python-tensorflow",
     ]
 }
 

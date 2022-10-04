@@ -45,7 +45,11 @@ RUN set -eux; \
 ARG REQUIREMENTS_DIR
 RUN --mount=type=bind,source=${REQUIREMENTS_DIR},target=./requirements \
     set -eux; \
-    ${DEEPHAVEN_HOME}/venv/bin/pip install --no-cache-dir --only-binary=:all: -r ./requirements/requirements.txt
+    ${DEEPHAVEN_HOME}/venv/bin/pip \
+        install \
+        --no-cache-dir \
+        --only-binary=:all: \
+        -r ./requirements/requirements.txt
 ENV VIRTUAL_ENV="${DEEPHAVEN_HOME}/venv" \
     PATH="${DEEPHAVEN_HOME}/venv/bin:${PATH}"
 # TODO: add requirements.txt into .tar, or as separate release artifact?
