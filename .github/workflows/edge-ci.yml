@@ -5,6 +5,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron:  '0 3 * * *'
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
 concurrency: release
@@ -50,7 +52,7 @@ jobs:
             py/server/build/wheel/*.whl
           retention-days: 5
 
-  build-edge-image:
+  bake-edge-images:
     needs: assemble-deephaven-core
     runs-on: ubuntu-22.04
     steps:
@@ -70,8 +72,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download a single artifact
-        uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: assemble-deephaven-core
           path: artifacts
@@ -96,7 +97,7 @@ jobs:
         with:
           targets: release-edge
           pull: true
-          push: false
+          push: ${{ github.event_name != 'pull_request' }}
         env:
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
           DEEPHAVEN_VERSION: ${{ steps.metadata.outputs.deephaven_version }}
