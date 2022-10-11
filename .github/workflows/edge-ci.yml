@@ -1,0 +1,105 @@
+name: Edge CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron:  '0 3 * * *'
+
+# For maximum cache coherency, ensure only one outstanding build at any given time
+concurrency: release
+
+jobs:
+  assemble-deephaven-core:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout deephaven-core
+        uses: actions/checkout@v3
+        with:
+          repository: deephaven/deephaven-core
+
+      - name: Setup JDK 11
+        id: setup-java-11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Set JAVA_HOME
+        run: echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
+
+      - name: Setup gradle properties
+        run: |
+          cat .github/env/${{ runner.os }}/gradle.properties >> gradle.properties
+          echo >> gradle.properties
+          echo "org.gradle.java.installations.paths=${{ steps.setup-java-11.outputs.path }}" >> gradle.properties
+          cat gradle.properties
+
+      - name: Assemble distribution
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          job-id: build-server
+          arguments: --scan server-jetty-app:assemble py-server:assemble
+          gradle-version: wrapper
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: assemble-deephaven-core
+          path: |
+            server/jetty-app/build/distributions/*.tar
+            py/server/build/wheel/*.whl
+          retention-days: 5
+
+  bake-edge-images:
+    needs: assemble-deephaven-core
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: assemble-deephaven-core
+          path: artifacts
+
+      # todo: discover version
+      - name: Metadata
+        id: metadata
+        run: |
+          deephaven_version=0.18.0
+          deephaven_checksum=$(sha256sum artifacts/server/jetty-app/build/distributions/server-jetty-${deephaven_version}.tar | awk -F " " '{print $1}')
+          echo "::set-output name=deephaven_version::${deephaven_version}"
+          echo "::set-output name=deephaven_checksum::${deephaven_checksum}"
+
+      - name: Prepare artifacts
+        run: |
+          mv artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.metadata.outputs.deephaven_version }}.tar server-scratch/
+          mv artifacts/py/server/build/wheel/deephaven_core-${{ steps.metadata.outputs.deephaven_version }}-py3-none-any.whl server/python/base/
+          echo "deephaven-core @ file:///requirements/deephaven_core-${{ steps.metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
+
+      - name: Bake (release-edge)
+        uses: docker/bake-action@v2.2.0
+        with:
+          targets: release-edge
+          pull: true
+          push: ${{ github.event_name != 'pull_request' }}
+        env:
+          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
+          DEEPHAVEN_VERSION: ${{ steps.metadata.outputs.deephaven_version }}
+          DEEPHAVEN_SHA256SUM: ${{ steps.metadata.outputs.deephaven_checksum }}
+          SERVER_SCRATCH_TARGET: server-scratch-local
