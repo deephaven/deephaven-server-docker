@@ -1,0 +1,47 @@
+name: Edge CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  assemble-deephaven-core:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout deephaven-core
+        uses: actions/checkout@v3
+        with:
+          repository: deephaven/deephaven-core
+
+      - name: Setup JDK 11
+        id: setup-java-11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Set JAVA_HOME
+        run: echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
+
+      - name: Setup gradle properties
+        run: |
+          cat .github/env/${{ runner.os }}/gradle.properties >> gradle.properties
+          echo >> gradle.properties
+          echo "org.gradle.java.installations.paths=${{ steps.setup-java-11.outputs.path }}" >> gradle.properties
+          cat gradle.properties
+
+      - name: Assemble distribution
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          job-id: build-server
+          arguments: --scan server-jetty-app:assemble py-server:assemble
+          gradle-version: wrapper
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: assemble-deephaven-core
+          path: |
+            server/jetty-app/build/distributions/*.tar
+            py/server/build/wheel/*.whl
