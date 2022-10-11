@@ -28,6 +28,13 @@ group "release" {
     ]
 }
 
+group "release-edge" {
+    targets = [
+        "server-scratch-edge-release",
+        "server-groovy-edge-release",
+        "server-python-edge-release",
+    ]
+}
 
 group "all" {
     targets = [
@@ -63,6 +70,9 @@ group "all" {
         "python-pytorch",
         "python-sklearn",
         "python-tensorflow",
+
+        // Note: edge builds not included, not part of local development workflow.
+        // See edge-ci.yml
     ]
 }
 
@@ -499,6 +509,58 @@ target "python-tensorflow-release" {
     inherits = [ "python-tensorflow" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}tensorflow" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}tensorflow" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
+}
+
+# -------------------------------------
+
+target "server-scratch-edge" {
+    context = "server-scratch/"
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-scratch:edge",
+    ]
+    target = "${SERVER_SCRATCH_TARGET}"
+    args = {
+        "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
+        "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
+    }
+}
+
+target "server-groovy-edge" {
+    inherits = [ "groovy-17" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-slim:edge",
+    ]
+}
+
+target "server-python-edge" {
+    inherits = [ "python-17-310" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}:edge",
+    ]
+}
+
+# -------------------------------------
+
+target "server-scratch-edge-release" {
+    inherits = [ "server-scratch-edge" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}edge-scratch" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}edge-scratch" ]
+    # We'll only release amd64, as the contents are the same as arm64
+    platforms = [ "linux/amd64" ]
+}
+
+target "server-groovy-edge-release" {
+    inherits = [ "server-groovy-edge" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}edge-groovy" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}edge-groovy" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
+}
+
+target "server-python-edge-release" {
+    inherits = [ "server-python-edge" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}edge-python" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}edge-python" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
