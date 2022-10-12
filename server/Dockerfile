@@ -12,6 +12,9 @@ FROM eclipse-temurin:${OPENJDK_VERSION} as openjdk
 FROM ubuntu:${UBUNTU_TAG} as base
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG DEEPHAVEN_HOME=/opt/deephaven
+ARG GRPC_HEALTH_PROBE_VERSION=v0.4.13
+ARG TARGETARCH
+ADD --link https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${TARGETARCH} /opt/grpc_health_probe/grpc_health_probe
 RUN set -eux; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
@@ -21,7 +24,8 @@ RUN set -eux; \
         locales; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8; \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*; \
+    chmod +x /opt/grpc_health_probe/grpc_health_probe
 ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
     LC_ALL='en_US.UTF-8' \
@@ -70,6 +74,7 @@ VOLUME /data
 VOLUME /cache
 EXPOSE 10000
 ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/image-bootstrap.properties"]
+HEALTHCHECK --interval=3s --retries=3 --timeout=11s CMD /opt/grpc_health_probe/grpc_health_probe -addr=localhost:10000 -connect-timeout=10s || exit 1
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
     io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}" \
@@ -91,6 +96,7 @@ VOLUME /data
 VOLUME /cache
 EXPOSE 10000
 ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/image-bootstrap.properties"]
+HEALTHCHECK --interval=3s --retries=3 --timeout=11s CMD /opt/grpc_health_probe/grpc_health_probe -addr=localhost:10000 -connect-timeout=10s || exit 1
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
     io.deephaven.server.checksum="${DEEPHAVEN_SHA256SUM}" \
