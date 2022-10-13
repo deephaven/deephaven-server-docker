@@ -93,7 +93,7 @@ jobs:
           echo "deephaven-core @ file:///requirements/deephaven_core-${{ steps.metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
 
       - name: Bake (release-edge)
-        uses: docker/bake-action@v2.2.0
+        uses: docker/bake-action@v2.3.0
         with:
           targets: release-edge
           pull: true
