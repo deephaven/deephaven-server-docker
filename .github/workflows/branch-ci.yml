@@ -96,8 +96,8 @@ jobs:
         run: |
           deephaven_version=$(< artifacts/build/version)
           deephaven_checksum=$(sha256sum artifacts/server/jetty-app/build/distributions/server-jetty-${deephaven_version}.tar | awk -F " " '{print $1}')
-          echo "::set-output name=deephaven_version::${deephaven_version}"
-          echo "::set-output name=deephaven_checksum::${deephaven_checksum}"
+          echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
+          echo "deephaven_checksum=${deephaven_checksum}" >> $GITHUB_OUTPUT
 
       # Note: this is providing defaults that work when the event type is not workflow_dispatch
       - name: Extract job metadata
@@ -105,8 +105,8 @@ jobs:
         run: |
           bake_targets=${{ github.event.inputs.bake_targets }}
           image_tag=${{ github.event.inputs.image_tag }}
-          echo "::set-output name=bake_targets::${bake_targets:-release}"
-          echo "::set-output name=image_tag::${image_tag:-edge}"
+          echo "bake_targets=${bake_targets:-release}" >> $GITHUB_OUTPUT
+          echo "image_tag=${image_tag:-edge}" >> $GITHUB_OUTPUT
 
       - name: Prepare artifacts
         run: |
