@@ -3,22 +3,21 @@ name: Branch CI
 on:
   pull_request:
     branches: [ main ]
+
+  schedule:
+    - cron:  '0 3 * * *'
+
   workflow_dispatch:
     inputs:
       deephaven_core_ref:
         description: 'The deephaven-core branch, tag, or SHA to checkout.'
         required: true
-        default: 'main'
+      image_tag:
+        description: 'The image tag. Applies to all targets.'
+        required: true
       bake_targets:
         description: 'The bake target(s), comma separated. Please ask for assistance.'
         required: true
-        default: 'release'
-      image_tag:
-        description: 'The image tag. Applies to targets.'
-        required: true
-        default: 'edge'
-  schedule:
-    - cron:  '0 3 * * *'
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
 concurrency: release
@@ -31,6 +30,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: deephaven/deephaven-core
+          # Note: for non workflow_dispatch types, the ref will be empty, and the default branch will be checked out
           ref: ${{ github.event.inputs.deephaven_core_ref }}
 
       - name: Setup JDK 11
@@ -91,31 +91,39 @@ jobs:
           name: assemble-deephaven-core
           path: artifacts
 
-      - name: Extract metadata
-        id: metadata
+      - name: Extract artifact metadata
+        id: artifact_metadata
         run: |
           deephaven_version=$(< artifacts/build/version)
           deephaven_checksum=$(sha256sum artifacts/server/jetty-app/build/distributions/server-jetty-${deephaven_version}.tar | awk -F " " '{print $1}')
           echo "::set-output name=deephaven_version::${deephaven_version}"
           echo "::set-output name=deephaven_checksum::${deephaven_checksum}"
 
+      # Note: this is providing defaults that work when the event type is not workflow_dispatch
+      - name: Extract job metadata
+        id: job_metadata
+          bake_targets=${{ github.event.inputs.bake_targets }}
+          image_tag=${{ github.event.inputs.image_tag }}
+          echo "::set-output name=bake_target::${bake_target:-"release"}
+          echo "::set-output name=image_tag::${image_tag:-"edge"}
+
       - name: Prepare artifacts
         run: |
-          mv artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.metadata.outputs.deephaven_version }}.tar server-scratch/
-          mv artifacts/py/server/build/wheel/deephaven_core-${{ steps.metadata.outputs.deephaven_version }}-py3-none-any.whl server/python/base/
-          echo "deephaven-core @ file:///requirements/deephaven_core-${{ steps.metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
+          mv artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar server-scratch/
+          mv artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl server/python/base/
+          echo "deephaven-core @ file:///requirements/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
 
       - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
-          targets: ${{ github.event.inputs.bake_targets }}
+          targets: ${{ steps.job_metadata.outputs.bake_targets }}
           pull: true
           push: ${{ github.event_name != 'pull_request' }}
           set: |
             *.cache-to=
         env:
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
-          DEEPHAVEN_VERSION: ${{ steps.metadata.outputs.deephaven_version }}
-          DEEPHAVEN_SHA256SUM: ${{ steps.metadata.outputs.deephaven_checksum }}
+          DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
+          DEEPHAVEN_SHA256SUM: ${{ steps.artifact_metadata.outputs.deephaven_checksum }}
           SERVER_SCRATCH_TARGET: server-scratch-local
-          TAG: ${{ github.event.inputs.image_tag }}
+          TAG: ${{ steps.job_metadata.outputs.image_tag }}
