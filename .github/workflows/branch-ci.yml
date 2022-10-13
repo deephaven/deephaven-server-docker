@@ -105,8 +105,8 @@ jobs:
         run: |
           bake_targets=${{ github.event.inputs.bake_targets }}
           image_tag=${{ github.event.inputs.image_tag }}
-          echo "::set-output name=bake_target::${bake_target:-"release"}
-          echo "::set-output name=image_tag::${image_tag:-"edge"}
+          echo "::set-output name=bake_target::${bake_target:-release}"
+          echo "::set-output name=image_tag::${image_tag:-edge}"
 
       - name: Prepare artifacts
         run: |
