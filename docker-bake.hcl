@@ -98,6 +98,13 @@ variable "TAG" {
     default = "latest"
 }
 
+// Due to our nightly builds, setting a build timestamp for org.opencontainers.image.created would
+// cause a new image manifest to be created every night, which is something we don't want unless
+// the base image has been updated.
+// variable "BUILD_TIMESTAMP" {
+//     default = "${timestamp()}"
+// }
+
 # -------------------------------------
 
 target "server-scratch" {
@@ -163,6 +170,7 @@ target "server-contexts" {
     args = {
         "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
+        // "BUILD_TIMESTAMP" = "${BUILD_TIMESTAMP}"
     }
 }
 

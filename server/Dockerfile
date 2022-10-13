@@ -5,11 +5,11 @@ ARG OPENJDK_VERSION
 
 # -------------------------------------
 
-FROM eclipse-temurin:${OPENJDK_VERSION} as openjdk
+FROM docker.io/eclipse-temurin:${OPENJDK_VERSION} as openjdk
 
 # -------------------------------------
 
-FROM ubuntu:${UBUNTU_TAG} as base
+FROM docker.io/ubuntu:${UBUNTU_TAG} as base
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG DEEPHAVEN_HOME=/opt/deephaven
 RUN set -eux; \
@@ -68,6 +68,7 @@ FROM --platform=linux/amd64 server-scratch as server-scratch-amd64
 FROM base as groovy
 ARG DEEPHAVEN_VERSION
 ARG DEEPHAVEN_SHA256SUM
+ARG UBUNTU_TAG
 COPY --link --from=openjdk ${JAVA_HOME} ${JAVA_HOME}
 COPY --link --from=server-scratch-amd64 ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
 COPY --link groovy/image-bootstrap.properties ${DEEPHAVEN_HOME}/config/image-bootstrap.properties
@@ -83,13 +84,19 @@ LABEL \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.title="Deephaven Server" \
     org.opencontainers.image.description="Deephaven Server" \
-    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0"
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
+    org.opencontainers.image.authors="developers@deephaven.io" \
+    org.opencontainers.image.base.name="docker.io/ubuntu:${UBUNTU_TAG}" \
+    org.opencontainers.image.source="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.url="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.version="${DEEPHAVEN_VERSION}"
 
 # -------------------------------------
 
 FROM python-base as python
 ARG DEEPHAVEN_VERSION
 ARG DEEPHAVEN_SHA256SUM
+ARG UBUNTU_TAG
 COPY --link --from=openjdk ${JAVA_HOME} ${JAVA_HOME}
 COPY --link --from=server-scratch-amd64 ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
 COPY --link python/image-bootstrap.properties ${DEEPHAVEN_HOME}/config/image-bootstrap.properties
@@ -105,6 +112,11 @@ LABEL \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.title="Deephaven Server" \
     org.opencontainers.image.description="Deephaven Server" \
-    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0"
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
+    org.opencontainers.image.authors="developers@deephaven.io" \
+    org.opencontainers.image.base.name="docker.io/ubuntu:${UBUNTU_TAG}" \
+    org.opencontainers.image.source="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.url="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.version="${DEEPHAVEN_VERSION}"
 
 # -------------------------------------

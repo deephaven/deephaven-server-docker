@@ -2,7 +2,7 @@
 
 # ----------------------------------------------------------------------------
 
-FROM busybox as untarred
+FROM docker.io/library/busybox as untarred
 ARG DEEPHAVEN_VERSION
 ARG DEEPHAVEN_SHA256SUM
 ARG DEEPHAVEN_HOME=/opt/deephaven
@@ -27,7 +27,12 @@ LABEL \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.title="Deephaven Server Scratch" \
     org.opencontainers.image.description="Deephaven Server Scratch" \
-    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0"
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
+    org.opencontainers.image.authors="developers@deephaven.io" \
+    org.opencontainers.image.base.name="scratch" \
+    org.opencontainers.image.source="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.url="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.version="${DEEPHAVEN_VERSION}"
 
 # ----------------------------------------------------------------------------
 #
@@ -36,7 +41,7 @@ LABEL \
 #
 # ----------------------------------------------------------------------------
 
-FROM busybox as untarred-local
+FROM docker.io/library/busybox as untarred-local
 ARG DEEPHAVEN_VERSION
 ARG DEEPHAVEN_SHA256SUM
 ARG DEEPHAVEN_HOME=/opt/deephaven
@@ -61,6 +66,11 @@ LABEL \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.title="Deephaven Server Scratch" \
     org.opencontainers.image.description="Deephaven Server Scratch" \
-    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0"
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
+    org.opencontainers.image.authors="developers@deephaven.io" \
+    org.opencontainers.image.base.name="scratch" \
+    org.opencontainers.image.source="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.url="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.version="${DEEPHAVEN_VERSION}"
 
 # ----------------------------------------------------------------------------
