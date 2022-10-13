@@ -1,10 +1,22 @@
-name: Edge CI
+name: Branch CI
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      deephaven_core_ref:
+        description: 'The deephaven-core branch, tag, or SHA to checkout.'
+        required: true
+        default: 'main'
+      bake_targets:
+        description: 'The bake target(s), comma separated. Please ask for assistance.'
+        required: true
+        default: 'release'
+      image_tag:
+        description: 'The image tag. Applies to targets.'
+        required: true
+        default: 'edge'
   schedule:
     - cron:  '0 3 * * *'
 
@@ -19,6 +31,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: deephaven/deephaven-core
+          ref: ${{ github.event.inputs.deephaven_core_ref }}
 
       - name: Setup JDK 11
         id: setup-java-11
@@ -41,18 +54,19 @@ jobs:
         uses: burrunan/gradle-cache-action@v1
         with:
           job-id: build-server
-          arguments: --scan server-jetty-app:assemble py-server:assemble
+          arguments: --scan outputVersion server-jetty-app:assemble py-server:assemble
           gradle-version: wrapper
 
       - uses: actions/upload-artifact@v3
         with:
           name: assemble-deephaven-core
           path: |
+            build/version
             server/jetty-app/build/distributions/*.tar
             py/server/build/wheel/*.whl
-          retention-days: 5
+          retention-days: 2
 
-  bake-edge-images:
+  bake-images:
     needs: assemble-deephaven-core
     runs-on: ubuntu-22.04
     steps:
@@ -77,11 +91,10 @@ jobs:
           name: assemble-deephaven-core
           path: artifacts
 
-      # todo: discover version
-      - name: Metadata
+      - name: Extract metadata
         id: metadata
         run: |
-          deephaven_version=0.18.0
+          deephaven_version=$(< artifacts/build/version)
           deephaven_checksum=$(sha256sum artifacts/server/jetty-app/build/distributions/server-jetty-${deephaven_version}.tar | awk -F " " '{print $1}')
           echo "::set-output name=deephaven_version::${deephaven_version}"
           echo "::set-output name=deephaven_checksum::${deephaven_checksum}"
@@ -92,14 +105,17 @@ jobs:
           mv artifacts/py/server/build/wheel/deephaven_core-${{ steps.metadata.outputs.deephaven_version }}-py3-none-any.whl server/python/base/
           echo "deephaven-core @ file:///requirements/deephaven_core-${{ steps.metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
 
-      - name: Bake (release-edge)
+      - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
-          targets: release-edge
+          targets: ${{ github.event.inputs.bake_targets }}
           pull: true
           push: ${{ github.event_name != 'pull_request' }}
+          set: |
+            *.cache-to=
         env:
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
           DEEPHAVEN_VERSION: ${{ steps.metadata.outputs.deephaven_version }}
           DEEPHAVEN_SHA256SUM: ${{ steps.metadata.outputs.deephaven_checksum }}
           SERVER_SCRATCH_TARGET: server-scratch-local
+          TAG: ${{ github.event.inputs.image_tag }}
