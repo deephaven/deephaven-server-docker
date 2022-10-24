@@ -106,7 +106,7 @@ variable "TAG" {
 // }
 
 variable "JAVA_OPTS" {
-    default = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100"
+    default = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication"
 }
 
 # -------------------------------------
