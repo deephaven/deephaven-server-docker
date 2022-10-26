@@ -23,7 +23,7 @@ RUN set -eux; \
     locale-gen en_US.UTF-8; \
     rm -rf /var/lib/apt/lists/*
 
-ARG GRPC_HEALTH_PROBE_VERSION=v0.4.13
+ARG GRPC_HEALTH_PROBE_VERSION=v0.4.14
 ARG TARGETARCH
 ADD --link --chmod=755 https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${TARGETARCH} /opt/grpc_health_probe/grpc_health_probe
 
