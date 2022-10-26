@@ -53,8 +53,8 @@ group "all" {
         "zulu-19",
         "zulu-17",
         "zulu-11",
-        "graal-ol8-17",
-        "graal-ol8-11",
+        "graal-17-22-3-0",
+        "graal-11-22-3-0",
 
         // Extras
         "python-all-ai",
@@ -379,23 +379,23 @@ target "zulu-11" {
     }
 }
 
-target "graal-ol8-17" {
+target "graal-17-22-3-0" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-graal-ol8-17:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-graal-17-22.3.0:${TAG}"
     ]
     args = {
-        "GENERIC_JAVA_BASE" = "ghcr.io/graalvm/jdk:ol8-java17"
+        "GENERIC_JAVA_BASE" = "ghcr.io/graalvm/jdk:ol9-java17-22.3.0"
     }
 }
 
-target "graal-ol8-11" {
+target "graal-11-22-3-0" {
     inherits = [ "generic-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-graal-ol8-11:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-graal-11-22.3.0:${TAG}"
     ]
     args = {
-        "GENERIC_JAVA_BASE" = "ghcr.io/graalvm/jdk:ol8-java11"
+        "GENERIC_JAVA_BASE" = "ghcr.io/graalvm/jdk:ol9-java11-22.3.0"
     }
 }
 
