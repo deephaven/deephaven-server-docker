@@ -105,6 +105,10 @@ variable "TAG" {
 //     default = "${timestamp()}"
 // }
 
+variable "JAVA_OPTS" {
+    default = "-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication"
+}
+
 # -------------------------------------
 
 target "server-scratch" {
@@ -171,6 +175,7 @@ target "server-contexts" {
         "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
         // "BUILD_TIMESTAMP" = "${BUILD_TIMESTAMP}"
+        "JAVA_OPTS" = "${JAVA_OPTS}"
     }
 }
 
@@ -346,6 +351,7 @@ target "generic-contexts" {
     args = {
         "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
+        "JAVA_OPTS" = "${JAVA_OPTS}"
     }
 }
 
