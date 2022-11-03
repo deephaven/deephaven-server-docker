@@ -72,12 +72,15 @@ ARG UBUNTU_TAG
 ARG JAVA_OPTS
 COPY --link --from=openjdk ${JAVA_HOME} ${JAVA_HOME}
 COPY --link --from=server-scratch-amd64 ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
-COPY --link groovy/image-bootstrap.properties ${DEEPHAVEN_HOME}/config/image-bootstrap.properties
+COPY --link groovy/deephaven.prop ${DEEPHAVEN_HOME}/config/deephaven.prop
 VOLUME /data
 VOLUME /cache
 EXPOSE 10000
-ENV JAVA_OPTS="${JAVA_OPTS}"
-ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/image-bootstrap.properties"]
+ENV \
+    DEEPHAVEN_CACHE_DIR="/cache" \
+    DEEPHAVEN_CONFIG_DIR="/opt/deephaven/config" \
+    DEEPHAVEN_DATA_DIR="/data"
+ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start"]
 HEALTHCHECK --interval=3s --retries=3 --timeout=11s CMD /opt/grpc_health_probe/grpc_health_probe -addr=localhost:10000 -connect-timeout=10s || exit 1
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
@@ -102,12 +105,15 @@ ARG UBUNTU_TAG
 ARG JAVA_OPTS
 COPY --link --from=openjdk ${JAVA_HOME} ${JAVA_HOME}
 COPY --link --from=server-scratch-amd64 ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
-COPY --link python/image-bootstrap.properties ${DEEPHAVEN_HOME}/config/image-bootstrap.properties
+COPY --link python/deephaven.prop ${DEEPHAVEN_HOME}/config/deephaven.prop
 VOLUME /data
 VOLUME /cache
 EXPOSE 10000
-ENV JAVA_OPTS="${JAVA_OPTS}"
-ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start", "/opt/deephaven/config/image-bootstrap.properties"]
+ENV \
+    DEEPHAVEN_CACHE_DIR="/cache" \
+    DEEPHAVEN_CONFIG_DIR="/opt/deephaven/config" \
+    DEEPHAVEN_DATA_DIR="/data"
+ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start"]
 HEALTHCHECK --interval=3s --retries=3 --timeout=11s CMD /opt/grpc_health_probe/grpc_health_probe -addr=localhost:10000 -connect-timeout=10s || exit 1
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
