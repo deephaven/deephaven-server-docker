@@ -18,7 +18,8 @@ ENV \
     DEEPHAVEN_HOME="${DEEPHAVEN_HOME}" \
     DEEPHAVEN_CACHE_DIR="/cache" \
     DEEPHAVEN_CONFIG_DIR="/opt/deephaven/config" \
-    DEEPHAVEN_DATA_DIR="/data"
+    DEEPHAVEN_DATA_DIR="/data" \
+    JAVA_OPTS="${JAVA_OPTS}"
 ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start"]
 HEALTHCHECK --interval=3s --retries=3 --timeout=11s CMD /opt/grpc_health_probe/grpc_health_probe -addr=localhost:10000 -connect-timeout=10s || exit 1
 LABEL \
