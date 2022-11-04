@@ -1,1 +1,1 @@
-deephaven-core==0.17.0
+deephaven-core==0.18.0
