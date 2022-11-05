@@ -42,12 +42,15 @@ group "all" {
         "python-11-38",
         "python-11-39",
         "python-11-310",
+        "python-11-311",
         "python-17-38",
         "python-17-39",
         "python-17-310",
+        "python-17-311",
         "python-19-38",
         "python-19-39",
         "python-19-310",
+        "python-19-311",
 
         // Generic servers
         "zulu-19",
@@ -257,6 +260,20 @@ target "python-11-310" {
     }
 }
 
+target "python-11-311" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-311:${TAG}"
+    ]
+    target = "python"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "11"
+        "PYTHON_VERSION" = "3.11"
+        "REQUIREMENTS_DIR" = "./python/base/"
+    }
+}
+
 target "python-17-38" {
     inherits = [ "server-contexts" ]
     tags = [
@@ -299,6 +316,20 @@ target "python-17-310" {
     }
 }
 
+target "python-17-311" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-311:${TAG}"
+    ]
+    target = "python"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "17"
+        "PYTHON_VERSION" = "3.11"
+        "REQUIREMENTS_DIR" = "./python/base/"
+    }
+}
+
 target "python-19-38" {
     inherits = [ "server-contexts" ]
     tags = [
@@ -337,6 +368,20 @@ target "python-19-310" {
         "UBUNTU_TAG" = "22.04"
         "OPENJDK_VERSION" = "19"
         "PYTHON_VERSION" = "3.10"
+        "REQUIREMENTS_DIR" = "./python/base/"
+    }
+}
+
+target "python-19-311" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-311:${TAG}"
+    ]
+    target = "python"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "19"
+        "PYTHON_VERSION" = "3.11"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
