@@ -1,2 +1,2 @@
-deephaven-core==0.18.0
+deephaven-core[autocomplete]==0.19.0
 scikit-learn

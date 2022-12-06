@@ -112,7 +112,7 @@ jobs:
         run: |
           mv artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar server-scratch/
           mv artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl server/python/base/
-          echo "deephaven-core @ file:///requirements/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
+          echo "deephaven-core[autocomplete] @ file:///requirements/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
 
       - name: Bake
         uses: docker/bake-action@v2.3.0
