@@ -1,1 +1,1 @@
-deephaven-core[autocomplete]==0.19.0
+deephaven-core[autocomplete]==0.19.1
