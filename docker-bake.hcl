@@ -81,11 +81,11 @@ variable "CACHE_PREFIX" {
 
 // Note: when updating DEEPHAVEN_VERSION, we should update requirements.txt.
 variable "DEEPHAVEN_VERSION" {
-    default = "0.19.0"
+    default = "0.19.1"
 }
 
 variable "DEEPHAVEN_SHA256SUM" {
-    default = "126b78ac2758c4c42b400278ddaa376787deb1a499fb6cefd7569ead4149912b"
+    default = "8b856558524e42d48ed37f8f63fb90e89b421f73160d1427186b3c5e6f09a412"
 }
 
 variable "SERVER_SCRATCH_TARGET" {
