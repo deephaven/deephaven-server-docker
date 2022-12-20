@@ -177,28 +177,60 @@ target "server-contexts" {
     }
 }
 
-target "groovy-11" {
+# -------------------------------------
+
+target "groovy-11-base" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-11:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-11-base:${TAG}"
     ]
-    target = "groovy"
+    target = "groovy-base"
     args = {
         "UBUNTU_TAG" = "22.04"
         "OPENJDK_VERSION" = "11"
     }
 }
 
-target "groovy-17" {
+target "groovy-17-base" {
     inherits = [ "server-contexts" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-17:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-17-base:${TAG}"
     ]
-    target = "groovy"
+    target = "groovy-base"
     args = {
         "UBUNTU_TAG" = "22.04"
         "OPENJDK_VERSION" = "17"
     }
+}
+
+target "groovy-19-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-19-base:${TAG}"
+    ]
+    target = "groovy-base"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "19"
+    }
+}
+
+# -------------------------------------
+
+target "groovy-11" {
+    inherits = [ "groovy-11-base" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-11:${TAG}"
+    ]
+    target = "groovy"
+}
+
+target "groovy-17" {
+    inherits = [ "groovy-17-base" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-17:${TAG}"
+    ]
+    target = "groovy"
 }
 
 target "groovy-19" {
@@ -206,177 +238,297 @@ target "groovy-19" {
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-groovy-19:${TAG}"
     ]
-    target = "groovy"
+    target = "groovy-19-base"
+}
+
+# -------------------------------------
+
+target "python-11-38-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-38-base:${TAG}"
+    ]
+    target = "python-base"
     args = {
-        "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "19"
+        "UBUNTU_TAG" = "20.04"
+        "OPENJDK_VERSION" = "11"
+        "PYTHON_VERSION" = "3.8"
     }
 }
 
-target "python-11-38" {
+target "python-11-39-base" {
     inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-39-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "20.04"
+        "OPENJDK_VERSION" = "11"
+        "PYTHON_VERSION" = "3.9"
+    }
+}
+
+target "python-11-310-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-310-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "11"
+        "PYTHON_VERSION" = "3.10"
+    }
+}
+
+target "python-11-311-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-311-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "11"
+        "PYTHON_VERSION" = "3.11"
+    }
+}
+
+target "python-17-38-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-38-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "20.04"
+        "OPENJDK_VERSION" = "17"
+        "PYTHON_VERSION" = "3.8"
+    }
+}
+
+target "python-17-39-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-39-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "20.04"
+        "OPENJDK_VERSION" = "17"
+        "PYTHON_VERSION" = "3.9"
+    }
+}
+
+target "python-17-310-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-310-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "17"
+        "PYTHON_VERSION" = "3.10"
+    }
+}
+
+target "python-17-311-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-311-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "17"
+        "PYTHON_VERSION" = "3.11"
+    }
+}
+
+target "python-19-38-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-38-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "20.04"
+        "OPENJDK_VERSION" = "19"
+        "PYTHON_VERSION" = "3.8"
+    }
+}
+
+target "python-19-39-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-39-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "20.04"
+        "OPENJDK_VERSION" = "19"
+        "PYTHON_VERSION" = "3.9"
+    }
+}
+
+target "python-19-310-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-310-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "19"
+        "PYTHON_VERSION" = "3.10"
+    }
+}
+
+target "python-19-311-base" {
+    inherits = [ "server-contexts" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-311-base:${TAG}"
+    ]
+    target = "python-base"
+    args = {
+        "UBUNTU_TAG" = "22.04"
+        "OPENJDK_VERSION" = "19"
+        "PYTHON_VERSION" = "3.11"
+    }
+}
+
+# -------------------------------------
+
+target "python-11-38" {
+    inherits = [ "python-11-38-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-38:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "11"
-        "PYTHON_VERSION" = "3.8"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-11-39" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-11-39-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-39:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "11"
-        "PYTHON_VERSION" = "3.9"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-11-310" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-11-310-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-310:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "11"
-        "PYTHON_VERSION" = "3.10"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-11-311" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-11-311-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-11-311:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "11"
-        "PYTHON_VERSION" = "3.11"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-17-38" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-17-38-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-38:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "17"
-        "PYTHON_VERSION" = "3.8"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-17-39" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-17-39-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-39:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "17"
-        "PYTHON_VERSION" = "3.9"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-17-310" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-17-310-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-310:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "17"
-        "PYTHON_VERSION" = "3.10"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-17-311" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-17-311-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-17-311:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "17"
-        "PYTHON_VERSION" = "3.11"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-19-38" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-19-38-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-38:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "19"
-        "PYTHON_VERSION" = "3.8"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-19-39" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-19-39-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-39:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "20.04"
-        "OPENJDK_VERSION" = "19"
-        "PYTHON_VERSION" = "3.9"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-19-310" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-19-310-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-310:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "19"
-        "PYTHON_VERSION" = "3.10"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
 
 target "python-19-311" {
-    inherits = [ "server-contexts" ]
+    inherits = [ "python-19-311-base" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-python-19-311:${TAG}"
     ]
     target = "python"
     args = {
-        "UBUNTU_TAG" = "22.04"
-        "OPENJDK_VERSION" = "19"
-        "PYTHON_VERSION" = "3.11"
         "REQUIREMENTS_DIR" = "./python/base/"
     }
 }
