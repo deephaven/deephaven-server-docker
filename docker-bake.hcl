@@ -101,6 +101,14 @@ variable "TAG" {
     default = "latest"
 }
 
+variable "INTERNAL_RELEASE_JAVA_STR" {
+    default = "17"
+}
+
+variable "INTERNAL_RELEASE_PYTHON_STR" {
+    default = "310"
+}
+
 // Due to our nightly builds, setting a build timestamp for org.opencontainers.image.created would
 // cause a new image manifest to be created every night, which is something we don't want unless
 // the base image has been updated.
@@ -124,7 +132,7 @@ target "server-scratch" {
 }
 
 target "server-groovy" {
-    inherits = [ "groovy-17" ]
+    inherits = [ "groovy-${INTERNAL_RELEASE_JAVA_STR}" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}-slim:${TAG}",
         equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}-slim:${DEEPHAVEN_VERSION}" : ""
@@ -132,10 +140,35 @@ target "server-groovy" {
 }
 
 target "server-python" {
-    inherits = [ "python-17-310" ]
+    inherits = [ "python-${INTERNAL_RELEASE_JAVA_STR}-${INTERNAL_RELEASE_PYTHON_STR}" ]
     tags = [
         "${REPO_PREFIX}${IMAGE_PREFIX}:${TAG}",
         equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}:${DEEPHAVEN_VERSION}" : ""
+    ]
+}
+
+# -------------------------------------
+
+# Note: the base hierarchy includes a bit more targets than actually necessary.
+# They include the scratch image, which isn't included as part of the base images.
+# This can be fixed in the future if we want to create a separate context that
+# isolates the base building logic.
+#
+# To see,
+# `docker buildx bake server-groovy-base --print`
+# includes the `server-scratch` target.
+
+target "server-groovy-base" {
+    inherits = [ "groovy-${INTERNAL_RELEASE_JAVA_STR}-base" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-slim-base:${TAG}"
+    ]
+}
+
+target "server-python-base" {
+    inherits = [ "python-${INTERNAL_RELEASE_JAVA_STR}-${INTERNAL_RELEASE_PYTHON_STR}-base" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-base:${TAG}"
     ]
 }
 
@@ -164,6 +197,25 @@ target "server-python-release" {
 }
 
 # -------------------------------------
+
+# todo: should these be different cache scopes?
+
+target "server-groovy-base-release" {
+    inherits = [ "server-groovy-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}groovy" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}groovy" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
+}
+
+target "server-python-base-release" {
+    inherits = [ "server-python-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}python" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}python" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
+}
+
+# -------------------------------------
+
 
 target "server-contexts" {
     context = "server/"

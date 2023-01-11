@@ -16,7 +16,12 @@ FROM --platform=linux/amd64 server-scratch as server-scratch-amd64
 FROM docker.io/ubuntu:${UBUNTU_TAG} as os-packages
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG DEEPHAVEN_HOME=/opt/deephaven
-RUN set -eux; \
+RUN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    set -eux; \
+    rm -f /etc/apt/apt.conf.d/docker-clean; \
+    echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' | tee /etc/apt/apt.conf.d/keep-cache; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
         liblzo2-2 \
@@ -24,8 +29,7 @@ RUN set -eux; \
         ca-certificates \
         locales; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
-    locale-gen en_US.UTF-8; \
-    rm -rf /var/lib/apt/lists/*
+    locale-gen en_US.UTF-8
 
 ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
@@ -79,15 +83,18 @@ LABEL \
 FROM os-packages as python-packages
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PYTHON_VERSION
-RUN set -eux; \
+RUN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+    set -eux; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
         libpython${PYTHON_VERSION} \
         python${PYTHON_VERSION} \
         python${PYTHON_VERSION}-venv; \
-    rm -rf /var/lib/apt/lists/*; \
     python${PYTHON_VERSION} -m venv ${DEEPHAVEN_HOME}/venv; \
-    ${DEEPHAVEN_HOME}/venv/bin/pip install --no-cache-dir --upgrade pip setuptools
+    ${DEEPHAVEN_HOME}/venv/bin/pip install --upgrade pip setuptools
 ENV \
     VIRTUAL_ENV="${DEEPHAVEN_HOME}/venv" \
     PATH="${DEEPHAVEN_HOME}/venv/bin:${PATH}"
@@ -110,11 +117,12 @@ ARG DEEPHAVEN_VERSION
 ARG DEEPHAVEN_SHA256SUM
 ARG UBUNTU_TAG
 ARG REQUIREMENTS_DIR
-RUN --mount=type=bind,source=${REQUIREMENTS_DIR},target=./requirements \
+RUN \
+    --mount=type=bind,source=${REQUIREMENTS_DIR},target=./requirements \
+    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     ${DEEPHAVEN_HOME}/venv/bin/pip \
         install \
-        --no-cache-dir \
         --only-binary=:all: \
         -r ./requirements/requirements.txt
 COPY --link --from=server-scratch-amd64 ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
