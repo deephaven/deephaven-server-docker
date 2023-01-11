@@ -17,9 +17,10 @@ FROM docker.io/ubuntu:${UBUNTU_TAG} as os-packages
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG DEEPHAVEN_HOME=/opt/deephaven
 ARG TARGETARCH
+ARG UBUNTU_TAG
 RUN \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH} \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH} \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_TAG} \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_TAG} \
     set -eux; \
     rm -f /etc/apt/apt.conf.d/docker-clean; \
     echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' | tee /etc/apt/apt.conf.d/keep-cache; \
@@ -85,10 +86,11 @@ FROM os-packages as python-packages
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PYTHON_VERSION
 ARG TARGETARCH
+ARG UBUNTU_TAG
 RUN \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH} \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH} \
-    --mount=type=cache,target=/root/.cache/pip,sharing=locked,id=pip-${TARGETARCH} \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_TAG} \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_TAG} \
+    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
@@ -122,7 +124,7 @@ ARG REQUIREMENTS_DIR
 ARG TARGETARCH
 RUN \
     --mount=type=bind,source=${REQUIREMENTS_DIR},target=./requirements \
-    --mount=type=cache,target=/root/.cache/pip,sharing=locked,id=pip-${TARGETARCH} \
+    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     ${DEEPHAVEN_HOME}/venv/bin/pip \
         install \
