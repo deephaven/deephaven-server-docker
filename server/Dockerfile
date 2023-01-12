@@ -102,18 +102,12 @@ ARG UBUNTU_TAG
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_TAG} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_TAG} \
-    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
         libpython${PYTHON_VERSION} \
         python${PYTHON_VERSION} \
-        python${PYTHON_VERSION}-venv; \
-    python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
-    /opt/deephaven/venv/bin/pip install --upgrade pip setuptools
-ENV \
-    VIRTUAL_ENV="/opt/deephaven/venv" \
-    PATH="/opt/deephaven/venv/bin:${PATH}"
+        python${PYTHON_VERSION}-venv
 LABEL \
     io.deephaven.server.python.version="${PYTHON_VERSION}"
 
@@ -147,20 +141,22 @@ FROM python-base-impl as python
 ARG DEEPHAVEN_VERSION
 ARG DEEPHAVEN_SHA256SUM
 ARG REQUIREMENTS_DIR
+ARG PYTHON_VERSION
 RUN \
     --mount=type=bind,source=${REQUIREMENTS_DIR},target=./requirements \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
-    /opt/deephaven/venv/bin/pip \
-        install \
-        --only-binary=:all: \
-        -r ./requirements/requirements.txt
+    python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
+    /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: -r ./requirements/requirements.txt
 COPY --link --from=server-scratch-amd64 /opt/deephaven /opt/deephaven
 COPY --link python/deephaven.prop /opt/deephaven/config/deephaven.prop
 VOLUME /data
 VOLUME /cache
 EXPOSE 10000
 ENV \
+    VIRTUAL_ENV="/opt/deephaven/venv" \
+    PATH="/opt/deephaven/venv/bin:${PATH}" \
     DEEPHAVEN_CACHE_DIR="/cache" \
     DEEPHAVEN_CONFIG_DIR="/opt/deephaven/config" \
     DEEPHAVEN_DATA_DIR="/data"
