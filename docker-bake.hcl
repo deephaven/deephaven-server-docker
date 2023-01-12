@@ -35,6 +35,10 @@ group "all" {
         "server-groovy",
         "server-python",
 
+        // OS
+        "server-os",
+        "server-slim-os",
+
         // Explicit JDK and Python versions
         "groovy-11",
         "groovy-17",
@@ -159,20 +163,20 @@ target "server-python" {
 # isolates the base building logic.
 #
 # To see,
-# `docker buildx bake server-groovy-base --print`
+# `docker buildx bake server-slim-os --print`
 # includes the `server-scratch` target.
 
-target "server-groovy-base" {
+target "server-slim-os" {
     inherits = [ "groovy-${INTERNAL_RELEASE_JAVA_STR}-base" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-slim-base-os:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-slim-os:${TAG}"
     ]
 }
 
-target "server-python-base" {
+target "server-os" {
     inherits = [ "python-${INTERNAL_RELEASE_JAVA_STR}-${INTERNAL_RELEASE_PYTHON_STR}-base" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-base-os:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-os:${TAG}"
     ]
 }
 
@@ -204,15 +208,15 @@ target "server-python-release" {
 
 # todo: should these be different cache scopes?
 
-target "server-groovy-base-release" {
-    inherits = [ "server-groovy-base" ]
+target "server-slim-os-release" {
+    inherits = [ "server-slim-os" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}groovy" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}groovy" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
-target "server-python-base-release" {
-    inherits = [ "server-python-base" ]
+target "server-os-release" {
+    inherits = [ "server-os" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}python" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}python" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
