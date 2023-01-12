@@ -44,10 +44,21 @@ FROM os-packages as groovy-base
 COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
 ARG GRPC_HEALTH_PROBE_VERSION=v0.4.14
 ARG TARGETARCH
+ARG UBUNTU_TAG
 ADD --link --chmod=755 https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${TARGETARCH} /opt/grpc_health_probe/grpc_health_probe
 ENV \
     JAVA_HOME=/opt/java/openjdk \
     PATH="/opt/java/openjdk/bin:${PATH}"
+LABEL \
+    io.deephaven.image.type="server-slim-base" \
+    org.opencontainers.image.vendor="Deephaven Data Labs" \
+    org.opencontainers.image.title="Deephaven Slim Base" \
+    org.opencontainers.image.description="Deephaven Slim Base" \
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
+    org.opencontainers.image.authors="developers@deephaven.io" \
+    org.opencontainers.image.base.name="docker.io/ubuntu:${UBUNTU_TAG}" \
+    org.opencontainers.image.source="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.url="https://github.com/deephaven/deephaven-server-docker"
 
 # -------------------------------------
 
@@ -108,11 +119,22 @@ ENV \
 FROM python-packages as python-base
 ARG GRPC_HEALTH_PROBE_VERSION=v0.4.14
 ARG TARGETARCH
+ARG UBUNTU_TAG
 ADD --link --chmod=755 https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${TARGETARCH} /opt/grpc_health_probe/grpc_health_probe
 COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
 ENV \
     JAVA_HOME=/opt/java/openjdk \
     PATH="/opt/java/openjdk/bin:${PATH}"
+LABEL \
+    io.deephaven.image.type="server-base" \
+    org.opencontainers.image.vendor="Deephaven Data Labs" \
+    org.opencontainers.image.title="Deephaven Server Base" \
+    org.opencontainers.image.description="Deephaven Server Base" \
+    org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
+    org.opencontainers.image.authors="developers@deephaven.io" \
+    org.opencontainers.image.base.name="docker.io/ubuntu:${UBUNTU_TAG}" \
+    org.opencontainers.image.source="https://github.com/deephaven/deephaven-server-docker" \
+    org.opencontainers.image.url="https://github.com/deephaven/deephaven-server-docker"
 
 # -------------------------------------
 
