@@ -15,6 +15,13 @@ group "extras" {
     ]
 }
 
+group "release-limited" {
+    targets = [
+        "server-groovy-release",
+        "server-python-release",
+    ]
+}
+
 group "release" {
     targets = [
         "server-scratch-release",
