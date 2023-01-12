@@ -91,6 +91,10 @@ variable "DEEPHAVEN_SHA256SUM" {
     default = "8b856558524e42d48ed37f8f63fb90e89b421f73160d1427186b3c5e6f09a412"
 }
 
+variable "GRPC_HEALTH_PROBE_VERSION" {
+    default = "0.4.14"
+}
+
 variable "SERVER_SCRATCH_TARGET" {
     default = "server-scratch"
     // See directions in DEVELOPMENT.md
@@ -225,6 +229,7 @@ target "server-contexts" {
     args = {
         "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
+        "GRPC_HEALTH_PROBE_VERSION" = "${GRPC_HEALTH_PROBE_VERSION}"
         // "BUILD_TIMESTAMP" = "${BUILD_TIMESTAMP}"
     }
 }
@@ -595,6 +600,7 @@ target "generic-contexts" {
     args = {
         "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "DEEPHAVEN_SHA256SUM" = "${DEEPHAVEN_SHA256SUM}"
+        "GRPC_HEALTH_PROBE_VERSION" = "${GRPC_HEALTH_PROBE_VERSION}"
     }
 }
 

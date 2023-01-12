@@ -4,17 +4,15 @@ ARG GENERIC_JAVA_BASE
 FROM $GENERIC_JAVA_BASE
 ARG DEEPHAVEN_VERSION
 ARG DEEPHAVEN_SHA256SUM
-ARG DEEPHAVEN_HOME=/opt/deephaven
-ARG GRPC_HEALTH_PROBE_VERSION=v0.4.14
+ARG GRPC_HEALTH_PROBE_VERSION
 ARG TARGETARCH
-ADD --link --chmod=755 https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${TARGETARCH} /opt/grpc_health_probe/grpc_health_probe
-COPY --link --from=server-scratch ${DEEPHAVEN_HOME} ${DEEPHAVEN_HOME}
-COPY --link deephaven.prop ${DEEPHAVEN_HOME}/config/deephaven.prop
+ADD --link --chmod=755 https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${TARGETARCH} /opt/grpc_health_probe/grpc_health_probe
+COPY --link --from=server-scratch /opt/deephaven /opt/deephaven
+COPY --link deephaven.prop /opt/deephaven/config/deephaven.prop
 VOLUME /data
 VOLUME /cache
 EXPOSE 10000
 ENV \
-    DEEPHAVEN_HOME="${DEEPHAVEN_HOME}" \
     DEEPHAVEN_CACHE_DIR="/cache" \
     DEEPHAVEN_CONFIG_DIR="/opt/deephaven/config" \
     DEEPHAVEN_DATA_DIR="/data"
