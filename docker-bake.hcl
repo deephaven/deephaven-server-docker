@@ -161,14 +161,14 @@ target "server-python" {
 target "server-groovy-base" {
     inherits = [ "groovy-${INTERNAL_RELEASE_JAVA_STR}-base" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-slim-base:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-slim-base-os:${TAG}"
     ]
 }
 
 target "server-python-base" {
     inherits = [ "python-${INTERNAL_RELEASE_JAVA_STR}-${INTERNAL_RELEASE_PYTHON_STR}-base" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-base:${TAG}"
+        "${REPO_PREFIX}${IMAGE_PREFIX}-base-os:${TAG}"
     ]
 }
 
