@@ -773,3 +773,25 @@ target "python-tensorflow-release" {
 }
 
 # -------------------------------------
+
+target "server-infra-11-310" {
+    inherits = [ "python-11-310-base" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-infra-11-310:${TAG}"
+    ]
+    target = "server-infra"
+    args = {
+        "INFRA_TYPE" = "server"
+    }
+}
+
+target "server-infra-17-310" {
+    inherits = [ "python-17-310-base" ]
+    tags = [
+        "${REPO_PREFIX}${IMAGE_PREFIX}-infra-17-310:${TAG}"
+    ]
+    target = "server-infra"
+    args = {
+        "INFRA_TYPE" = "server"
+    }
+}

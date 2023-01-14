@@ -1,0 +1,11 @@
+# Note: this is a bit of a hack. Ideally, deephaven-core wouldn't need to rely on pre-built
+# images to save build / CI time, but it doesn't currently have buildx / cache support.
+# 
+# These are dependencies of deephaven-core[autocomplete], not including deephaven-core.
+jpy>=0.13.0
+deephaven-plugin
+numpy
+pandas
+pyarrow<10
+numba; python_version < "3.11"
+jedi==0.18.2

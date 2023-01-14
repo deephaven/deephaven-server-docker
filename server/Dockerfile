@@ -146,6 +146,7 @@ RUN \
     --mount=type=bind,source=${REQUIREMENTS_DIR},target=./requirements \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
+    mkdir -p /opt/deephaven; \
     python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
     /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
     /opt/deephaven/venv/bin/pip install --only-binary=:all: -r ./requirements/requirements.txt
@@ -169,5 +170,25 @@ LABEL \
     org.opencontainers.image.title="Deephaven Server" \
     org.opencontainers.image.description="Deephaven Server" \
     org.opencontainers.image.version="${DEEPHAVEN_VERSION}"
+
+# -------------------------------------
+
+FROM python-base-impl as server-infra
+ARG REQUIREMENTS_DIR
+ARG PYTHON_VERSION
+ARG INFRA_TYPE
+RUN \
+    --mount=type=bind,source=server-infra/python${PYTHON_VERSION}/${INFRA_TYPE},target=./requirements \
+    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+    set -eux; \
+    mkdir -p /opt/deephaven; \
+    python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
+    /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: -r ./requirements/requirements.txt
+LABEL \
+    io.deephaven.image.type="server-infra" \
+    io.deephaven.image.infra.type="${INFRA_TYPE}" \
+    org.opencontainers.image.title="Deephaven Server Infra (${INFRA_TYPE})" \
+    org.opencontainers.image.description="Deephaven Server Infra (${INFRA_TYPE})"
 
 # -------------------------------------
