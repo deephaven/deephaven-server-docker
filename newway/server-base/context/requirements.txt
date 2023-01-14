@@ -11,3 +11,9 @@ pandas
 pyarrow<10
 numba; python_version < "3.11"
 jedi==0.18.2
+
+# deephaven-core also expects wheel to be installed...
+wheel
+
+# some extra utilities
+java-utilities
