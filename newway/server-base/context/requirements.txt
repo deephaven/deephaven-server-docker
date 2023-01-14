@@ -2,6 +2,8 @@
 # images to save build / CI time, but it doesn't currently have buildx / cache support.
 # 
 # These are dependencies of deephaven-core[autocomplete], not including deephaven-core.
+#
+# See https://github.com/deephaven/deephaven-core/blob/main/py/server/setup.py
 jpy>=0.13.0
 deephaven-plugin
 numpy

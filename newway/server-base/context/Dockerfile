@@ -64,7 +64,6 @@ LABEL \
 FROM libpython-bits as venv-bits
 ARG PYTHON_VERSION
 ARG REQUIREMENTS_TYPE
-ARG DEEPHAVEN_VERSION
 RUN \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements-2.txt \
@@ -107,6 +106,6 @@ LABEL \
 FROM grpc-health-probe-bits as server-base
 LABEL \
     io.deephaven.image.type="server-base" \
-    org.opencontainers.image.title="Deephaven Server" \
-    org.opencontainers.image.description="Deephaven Server" \
+    org.opencontainers.image.title="Deephaven Server Base" \
+    org.opencontainers.image.description="Deephaven Server Base" \
     org.opencontainers.image.version="${DEEPHAVEN_VERSION}"
