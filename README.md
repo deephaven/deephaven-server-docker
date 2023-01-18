@@ -11,7 +11,7 @@ docker run \
     --rm \
     --name deephaven \
     -p 10000:10000 \
-    ghcr.io/deephaven/server:0.19.1
+    ghcr.io/deephaven/server:0.20.0
 ```
 
 This will start the server, and the web UI will be available at [http://localhost:10000](http://localhost:10000).
@@ -20,9 +20,9 @@ This will start the server, and the web UI will be available at [http://localhos
 
 The following server images are currently being produced:
 
-* `ghcr.io/deephaven/server:0.19.1`
-* `ghcr.io/deephaven/server-slim:0.19.1`
-* `ghcr.io/deephaven/server-scratch:0.19.1`
+* `ghcr.io/deephaven/server:0.20.0`
+* `ghcr.io/deephaven/server-slim:0.20.0`
+* `ghcr.io/deephaven/server-scratch:0.20.0`
 
 ### Linux
 
@@ -38,12 +38,12 @@ The Linux images can be used with the [Windows Subsystem for Linux](https://docs
 
 ### Scratch
 
-A "scratch" image is also being produced, `ghcr.io/deephaven/server-scratch:0.19.1`.
+A "scratch" image is also being produced, `ghcr.io/deephaven/server-scratch:0.20.0`.
 It contains just the application bits (no OS) unpackaged into `/opt/deephaven/`.
 This is useful for third-parties that want to quickly mix-in the Deephaven application with their own Dockerfiles:
 
 ```Dockerfile
-COPY --link --from=ghcr.io/deephaven/server-scratch:0.19.1 /opt/deephaven /opt/deephaven
+COPY --link --from=ghcr.io/deephaven/server-scratch:0.20.0 /opt/deephaven /opt/deephaven
 ```
 
 In this mode, users are responsible for providing their own JVM (and Python virtual environment if applicable).
