@@ -28,9 +28,8 @@ variable "CACHE_PREFIX" {
     default = "deephaven-server-docker-"
 }
 
-// Note: when updating DEEPHAVEN_VERSION, we should update requirements.txt.
 variable "DEEPHAVEN_VERSION" {
-    default = "0.19.1"
+    default = "0.20.0"
 }
 
 variable "OPENJDK_VERSION" {

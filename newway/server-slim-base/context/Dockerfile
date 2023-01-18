@@ -42,46 +42,7 @@ LABEL \
 
 # -------------------------------------
 
-FROM os-bits as libpython-bits
-ARG DEBIAN_FRONTEND="noninteractive"
-ARG TARGETARCH
-ARG UBUNTU_VERSION
-ARG PYTHON_VERSION
-RUN \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
-    set -eux; \
-    apt-get -qq update; \
-    apt-get -qq -y --no-install-recommends install \
-        libpython${PYTHON_VERSION} \
-        python${PYTHON_VERSION} \
-        python${PYTHON_VERSION}-venv
-LABEL \
-    io.deephaven.server.python.version="${PYTHON_VERSION}"
-
-# -------------------------------------
-
-FROM libpython-bits as venv-bits
-ARG PYTHON_VERSION
-ARG REQUIREMENTS_TYPE
-RUN \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements-2.txt \
-    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
-    set -eux; \
-    mkdir -p /opt/deephaven; \
-    python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
-    /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
-    /opt/deephaven/venv/bin/pip install --only-binary=:all: -r requirements.txt -r requirements-2.txt
-ENV \
-    VIRTUAL_ENV="/opt/deephaven/venv" \
-    PATH="/opt/deephaven/venv/bin:${PATH}"
-LABEL \
-    io.deephaven.server.python.requirements.type="${REQUIREMENTS_TYPE}"
-
-# -------------------------------------
-
-FROM venv-bits as openjdk-bits
+FROM os-bits as openjdk-bits
 ARG OPENJDK_VERSION
 COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
 ENV \
@@ -103,8 +64,8 @@ LABEL \
 
 # -------------------------------------
 
-FROM grpc-health-probe-bits as server-base
+FROM grpc-health-probe-bits as server-slim-base
 LABEL \
-    io.deephaven.image.type="server-base" \
-    org.opencontainers.image.title="Deephaven Server Base" \
-    org.opencontainers.image.description="Deephaven Server Base"
+    io.deephaven.image.type="server-slim-base" \
+    org.opencontainers.image.title="Deephaven Server Slim Base" \
+    org.opencontainers.image.description="Deephaven Server Slim Base"
