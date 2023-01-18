@@ -1,5 +1,7 @@
 # server
 
+## Arguments
+
 * DEEPHAVEN_VERSION
 * REQUIREMENTS_TYPE
 * OPENJDK_VERSION
@@ -18,11 +20,18 @@ docker buildx build \
     .
 ```
 
-| Image                | REQUIREMENTS_TYPE | OPENJDK_VERSION | PYTHON_VERSION | UBUNTU_VERSION |
-| -------------------- | ----------------- | --------------- | -------------- | -------------- |
-| server               | server            | 17              | 3.10           | 22.04          |
-| server-all-ai        | server-all-ai     | 17              | 3.10           | 22.04          |
-| server-nltk          | server-nltk       | 17              | 3.10           | 22.04          |
-| server-pytorch       | server-pytorch    | 17              | 3.10           | 22.04          |
-| server-sklearn       | server-sklearn    | 17              | 3.10           | 22.04          |
-| server-tensorflow    | server-tensorflow | 17              | 3.10           | 22.04          |
+or
+
+```
+docker buildx bake
+```
+
+
+| Image                       | REQUIREMENTS_TYPE | OPENJDK_VERSION | PYTHON_VERSION | UBUNTU_VERSION |
+| --------------------------- | ----------------- | --------------- | -------------- | -------------- |
+| deephaven/server            | server            | 17              | 3.10           | 22.04          |
+| deephaven/server-all-ai     | server-all-ai     | 17              | 3.10           | 22.04          |
+| deephaven/server-nltk       | server-nltk       | 17              | 3.10           | 22.04          |
+| deephaven/server-pytorch    | server-pytorch    | 17              | 3.10           | 22.04          |
+| deephaven/server-sklearn    | server-sklearn    | 17              | 3.10           | 22.04          |
+| deephaven/server-tensorflow | server-tensorflow | 17              | 3.10           | 22.04          |
