@@ -15,6 +15,13 @@ group "extras" {
     ]
 }
 
+group "release-limited" {
+    targets = [
+        "server-groovy-release",
+        "server-python-release",
+    ]
+}
+
 group "release" {
     targets = [
         "server-scratch-release",
@@ -88,11 +95,11 @@ variable "CACHE_PREFIX" {
 
 // Note: when updating DEEPHAVEN_VERSION, we should update requirements.txt.
 variable "DEEPHAVEN_VERSION" {
-    default = "0.19.1"
+    default = "0.20.0"
 }
 
 variable "DEEPHAVEN_SHA256SUM" {
-    default = "8b856558524e42d48ed37f8f63fb90e89b421f73160d1427186b3c5e6f09a412"
+    default = "1db0f52c3e47c4f17411a39e6fd08184fc39984f4fffc30be60c2c4479a30aaa"
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
