@@ -1,2 +1,0 @@
-deephaven-core[autocomplete]==0.20.0
-nltk
