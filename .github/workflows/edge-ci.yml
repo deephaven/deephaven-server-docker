@@ -1,17 +1,12 @@
-name: Branch CI
+name: Edge CI
 
+# Note: there is no way to schedule a recurring workflow on a different branch (https://github.com/orgs/community/discussions/16107).
+# Thus, any changes to this workflow file that should be applied during the next run needs to be committed to main, not edge.
 on:
-  workflow_dispatch:
-    inputs:
-      deephaven_core_ref:
-        description: 'The deephaven-core branch, tag, or SHA to checkout.'
-        required: true
-      image_tag:
-        description: 'The image tag. Applies to all targets.'
-        required: true
-      bake_targets:
-        description: 'The bake target(s), comma separated. Please ask for assistance.'
-        required: true
+  schedule:
+    - cron:  '0 3 * * *'
+  pull_request:
+    branches: [ main ]
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
 concurrency: release
@@ -24,7 +19,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: deephaven/deephaven-core
-          ref: ${{ github.event.inputs.deephaven_core_ref }}
 
       - name: Setup JDK 11
         id: setup-java-11
@@ -94,13 +88,6 @@ jobs:
           echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
           echo "deephaven_checksum=${deephaven_checksum}" >> $GITHUB_OUTPUT
 
-      # Note: this is providing defaults that work when the event type is not workflow_dispatch
-      - name: Extract job metadata
-        id: job_metadata
-        run: |
-          echo "bake_targets=${{ github.event.inputs.bake_targets }}" >> $GITHUB_OUTPUT
-          echo "image_tag=${{ github.event.inputs.image_tag }}" >> $GITHUB_OUTPUT
-
       - name: Prepare artifacts
         run: |
           mv artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar server-scratch/
@@ -110,7 +97,7 @@ jobs:
       - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
-          targets: ${{ steps.job_metadata.outputs.bake_targets }}
+          targets: release-limited
           pull: true
           push: ${{ github.event_name != 'pull_request' }}
           set: |
@@ -119,5 +106,5 @@ jobs:
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
           DEEPHAVEN_SHA256SUM: ${{ steps.artifact_metadata.outputs.deephaven_checksum }}
-          SERVER_SCRATCH_ TARGET: server-scratch-local
-          TAG: ${{ steps.job_metadata.outputs.image_tag }}
+          SERVER_SCRATCH_TARGET: server-scratch-local
+          TAG: edge
