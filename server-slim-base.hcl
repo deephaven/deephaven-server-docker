@@ -1,6 +1,6 @@
 group "default" {
     targets = [
-        "server-slim"
+        "server-slim-base"
     ]
 }
 
@@ -11,15 +11,11 @@ variable "REPO_PREFIX" {
 }
 
 variable "IMAGE_PREFIX" {
-    default = "server-slim"
+    default = "server-slim-base"
 }
 
 variable "CACHE_PREFIX" {
     default = "deephaven-server-docker-"
-}
-
-variable "DEEPHAVEN_VERSION" {
-    default = "0.20.0"
 }
 
 variable "OPENJDK_VERSION" {
@@ -59,20 +55,18 @@ variable "GITHUB_ACTIONS" {
 
 # -------------------------------------
 
-target "server-slim" {
+target "server-slim-base" {
     inherits = [ "shared-context" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${IMAGE_PREFIX}:${TAG}"
     ]
 }
 
 # -------------------------------------
 
 target "shared-context" {
-    context = "context/"
+    context = "contexts/server-slim-base/"
     args = {
-        "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "OPENJDK_VERSION" = "${OPENJDK_VERSION}"
         "UBUNTU_VERSION" = "${UBUNTU_VERSION}"
         "GRPC_HEALTH_PROBE_VERSION" = "${GRPC_HEALTH_PROBE_VERSION}"

@@ -21,15 +21,11 @@ variable "REPO_PREFIX" {
 }
 
 variable "IMAGE_PREFIX" {
-    default = "server"
+    default = "server-base"
 }
 
 variable "CACHE_PREFIX" {
     default = "deephaven-server-docker-"
-}
-
-variable "DEEPHAVEN_VERSION" {
-    default = "0.20.0"
 }
 
 variable "OPENJDK_VERSION" {
@@ -76,8 +72,7 @@ variable "GITHUB_ACTIONS" {
 target "server" {
     inherits = [ "shared-context" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${IMAGE_PREFIX}:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server"
@@ -89,8 +84,7 @@ target "server" {
 target "server-all-ai" {
     inherits = [ "shared-context" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-all-ai:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}-all-ai:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${IMAGE_PREFIX}-all-ai:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-all-ai"
@@ -100,8 +94,7 @@ target "server-all-ai" {
 target "server-nltk" {
     inherits = [ "shared-context" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-nltk:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}-nltk:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${IMAGE_PREFIX}-nltk:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-nltk"
@@ -111,8 +104,7 @@ target "server-nltk" {
 target "server-pytorch" {
     inherits = [ "shared-context" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-pytorch:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}-pytorch:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${IMAGE_PREFIX}-pytorch:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-pytorch"
@@ -122,8 +114,7 @@ target "server-pytorch" {
 target "server-sklearn" {
     inherits = [ "shared-context" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-sklearn:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}-sklearn:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${IMAGE_PREFIX}-sklearn:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-sklearn"
@@ -133,8 +124,7 @@ target "server-sklearn" {
 target "server-tensorflow" {
     inherits = [ "shared-context" ]
     tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}-tensorflow:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${IMAGE_PREFIX}-tensorflow:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${IMAGE_PREFIX}-tensorflow:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-tensorflow"
@@ -144,9 +134,8 @@ target "server-tensorflow" {
 # -------------------------------------
 
 target "shared-context" {
-    context = "context/"
+    context = "contexts/server-base/"
     args = {
-        "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "OPENJDK_VERSION" = "${OPENJDK_VERSION}"
         "PYTHON_VERSION" = "${PYTHON_VERSION}"
         "UBUNTU_VERSION" = "${UBUNTU_VERSION}"
