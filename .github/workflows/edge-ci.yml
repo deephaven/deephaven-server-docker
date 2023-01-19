@@ -1,11 +1,11 @@
 name: Edge CI
 
-# Note: there is no way to schedule a recurring workflow on a different branch (https://github.com/orgs/community/discussions/16107).
-# Thus, any changes to this workflow file that should be applied during the next run needs to be committed to main, not edge.
 on:
   schedule:
     - cron:  '0 3 * * *'
   pull_request:
+    branches: [ main ]
+  push:
     branches: [ main ]
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
@@ -59,8 +59,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: edge
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
