@@ -30,13 +30,6 @@ RUN \
         ; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8
-# This run step is kept separate to be able to share the above shared RUN w/ server image
-RUN \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
-    set -eux; \
-    # curl is necessary for some kafka stuff (todo, document)
-    apt-get -qq -y --no-install-recommends install curl
 ENV \
     LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
