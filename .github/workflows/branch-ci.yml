@@ -90,13 +90,6 @@ jobs:
           deephaven_version=$(< artifacts/build/version)
           echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
 
-      # Note: this is providing defaults that work when the event type is not workflow_dispatch
-      - name: Extract job metadata
-        id: job_metadata
-        run: |
-          echo "bake_targets=${{ github.event.inputs.bake_targets }}" >> $GITHUB_OUTPUT
-          echo "image_tag=${{ github.event.inputs.image_tag }}" >> $GITHUB_OUTPUT
-
       - name: Prepare artifacts
         run: |
           cp artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl contexts/server/
@@ -106,7 +99,7 @@ jobs:
       - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
-          targets: ${{ steps.job_metadata.outputs.bake_targets }}
+          targets: ${{ github.event.inputs.bake_targets }}
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
           pull: true
           set: |
@@ -116,4 +109,4 @@ jobs:
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
           RELEASE: true
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
-          TAG: ${{ steps.job_metadata.outputs.image_tag }}
+          TAG: ${{ github.event.inputs.image_tag }}

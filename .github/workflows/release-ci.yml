@@ -36,5 +36,5 @@ jobs:
           files: server.hcl,server-slim.hcl
           pull: true
         env:
-          RELEASE: ${{ !startsWith(github.ref, 'refs/heads/release/v') }}
+          RELEASE: ${{ startsWith(github.ref, 'refs/heads/release/v') }}
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
