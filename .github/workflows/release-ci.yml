@@ -1,17 +1,16 @@
-name: Build CI
+name: Release CI
 
 on:
   pull_request:
     branches: [ main ]
+  push:
+    branches: [ 'main', 'release/v*' ]
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
 concurrency: release
 
 jobs:
   build:
-    # Forks don't need to run the scheduled cron
-    if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
-
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -30,16 +29,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Bake server and server-slim
-        uses: docker/bake-action@v2.3.0
-        with:
-          targets: server,server-slim
-          files: server.hcl,server-slim.hcl
-          pull: true
-        env:
-          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
-          RELEASE: ${{ github.event_name != 'pull_request' }}
-
       - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
@@ -47,5 +36,5 @@ jobs:
           files: server.hcl,server-slim.hcl
           pull: true
         env:
-          RELEASE: ${{ github.event_name != 'pull_request' }}
+          RELEASE: ${{ !startsWith(github.ref, 'refs/heads/release/v') }}
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
