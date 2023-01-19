@@ -28,6 +28,12 @@ variable "CACHE_PREFIX" {
     default = "deephaven-server-docker-"
 }
 
+variable "DEEPHAVEN_SOURCES" {
+    // "released" means that the build will use the released sources - tar from GitHub and wheel from PyPi
+    // "custom" means that the builder will provide the tar and wheel files
+    default = "released"
+}
+
 variable "DEEPHAVEN_VERSION" {
     default = "0.20.0"
 }
@@ -45,7 +51,7 @@ variable "UBUNTU_VERSION" {
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
-    default = "0.4.14"
+    default = "0.4.15"
 }
 
 variable "TAG" {
@@ -146,11 +152,12 @@ target "server-tensorflow" {
 target "server-context" {
     context = "contexts/server/"
     args = {
-        "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
-        "OPENJDK_VERSION" = "${OPENJDK_VERSION}"
-        "PYTHON_VERSION" = "${PYTHON_VERSION}"
-        "UBUNTU_VERSION" = "${UBUNTU_VERSION}"
-        "GRPC_HEALTH_PROBE_VERSION" = "${GRPC_HEALTH_PROBE_VERSION}"
+        DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
+        OPENJDK_VERSION = OPENJDK_VERSION
+        PYTHON_VERSION = PYTHON_VERSION
+        UBUNTU_VERSION = UBUNTU_VERSION
+        GRPC_HEALTH_PROBE_VERSION = GRPC_HEALTH_PROBE_VERSION
+        DEEPHAVEN_SOURCES = DEEPHAVEN_SOURCES
     }
     cache-from = [
         GITHUB_ACTIONS && RELEASE ? "type=gha,scope=${CACHE_PREFIX}" : ""
