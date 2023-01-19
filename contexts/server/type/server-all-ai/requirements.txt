@@ -1,0 +1,4 @@
+nltk
+tensorflow
+torch
+scikit-learn

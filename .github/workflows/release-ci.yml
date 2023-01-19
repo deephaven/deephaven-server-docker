@@ -1,0 +1,40 @@
+name: Release CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ 'main', 'release/v*' ]
+
+# For maximum cache coherency, ensure only one outstanding build at any given time
+concurrency: release
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bake
+        uses: docker/bake-action@v2.3.0
+        with:
+          targets: server,server-slim,server-all-ai,server-nltk,server-pytorch,server-sklearn,server-tensorflow
+          files: server.hcl,server-slim.hcl
+          pull: true
+        env:
+          RELEASE: ${{ startsWith(github.ref, 'refs/heads/release/v') }}
+          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/

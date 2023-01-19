@@ -1,0 +1,19 @@
+# Note: this is a bit of a hack. Ideally, deephaven-core wouldn't need to rely on pre-built
+# images to save build / CI time, but it doesn't currently have buildx / cache support.
+# 
+# These are dependencies of deephaven-core[autocomplete], not including deephaven-core.
+#
+# See https://github.com/deephaven/deephaven-core/blob/main/py/server/setup.py
+jpy>=0.13.0
+deephaven-plugin
+numpy
+pandas
+pyarrow
+numba; python_version < "3.11"
+jedi==0.18.2
+
+# deephaven-core also expects wheel to be installed...
+wheel
+
+# some extra utilities
+java-utilities

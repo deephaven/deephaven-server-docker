@@ -22,7 +22,11 @@ The following server images are currently being produced:
 
 * `ghcr.io/deephaven/server:0.20.0`
 * `ghcr.io/deephaven/server-slim:0.20.0`
-* `ghcr.io/deephaven/server-scratch:0.20.0`
+* `ghcr.io/deephaven/server-all-ai:0.20.0`
+* `ghcr.io/deephaven/server-nltk:0.20.0`
+* `ghcr.io/deephaven/server-pytorch:0.20.0`
+* `ghcr.io/deephaven/server-sklearn:0.20.0`
+* `ghcr.io/deephaven/server-tensorflow:0.20.0`
 
 ### Linux
 
@@ -36,38 +40,25 @@ Both the Intel and M1 architectures are supported with the Linux images.
 
 The Linux images can be used with the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/). Windows native images are not currently being produced, but may be produced in the future.
 
-### Scratch
-
-A "scratch" image is also being produced, `ghcr.io/deephaven/server-scratch:0.20.0`.
-It contains just the application bits (no OS) unpackaged into `/opt/deephaven/`.
-This is useful for third-parties that want to quickly mix-in the Deephaven application with their own Dockerfiles:
-
-```Dockerfile
-COPY --link --from=ghcr.io/deephaven/server-scratch:0.20.0 /opt/deephaven /opt/deephaven
-```
-
-In this mode, users are responsible for providing their own JVM (and Python virtual environment if applicable).
-
 ## Build
 
 ### CI
 
-The images are automatically built and deployed by GitHub Actions CI, see [build-ci.yml](.github/workflows/build-ci.yml).
+The images are automatically built and deployed by GitHub Actions CI, see [release-ci.yml](.github/workflows/release-ci.yml).
 
 ### Local
 
 For a default, local-only build on your system's platform, run:
 
 ```
-# Build all of the default images:
-docker buildx bake
+# Build the default server image:
+docker buildx bake -f server.hcl
 
 # Build a specific target image:
-docker buildx bake python-11-310
+docker buildx bake -f server.hcl server-all-ai
 ```
 
-See [docker-bake.hcl](docker-bake.hcl) for parameterization options.
-
+See the various hcl files for parameterization options.
 
 ## Resources
 

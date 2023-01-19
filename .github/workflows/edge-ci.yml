@@ -13,6 +13,9 @@ concurrency: release
 
 jobs:
   assemble-deephaven-core:
+      # Forks don't need to run the scheduled cron
+    if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
+
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout deephaven-core
@@ -54,6 +57,9 @@ jobs:
           retention-days: 2
 
   bake-images:
+      # Forks don't need to run the scheduled cron
+    if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
+
     needs: assemble-deephaven-core
     runs-on: ubuntu-22.04
     steps:
@@ -82,27 +88,23 @@ jobs:
         id: artifact_metadata
         run: |
           deephaven_version=$(< artifacts/build/version)
-          deephaven_checksum=$(sha256sum artifacts/server/jetty-app/build/distributions/server-jetty-${deephaven_version}.tar | awk -F " " '{print $1}')
           echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
-          echo "deephaven_checksum=${deephaven_checksum}" >> $GITHUB_OUTPUT
 
       - name: Prepare artifacts
         run: |
-          mv artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar server-scratch/
-          mv artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl server/python/base/
-          echo "deephaven-core[autocomplete] @ file:///requirements/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
+          cp artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl contexts/server/
+          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server/
+          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
-          targets: release-limited
+          targets: server,server-slim,server-base,server-slim-base
+          files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
           pull: true
-          push: ${{ github.event_name != 'pull_request' }}
-          set: |
-            *.cache-to=
         env:
-          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
+          DEEPHAVEN_SOURCES: custom
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
-          DEEPHAVEN_SHA256SUM: ${{ steps.artifact_metadata.outputs.deephaven_checksum }}
-          SERVER_SCRATCH_TARGET: server-scratch-local
+          RELEASE: ${{ github.event_name != 'pull_request' }}
+          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
           TAG: edge

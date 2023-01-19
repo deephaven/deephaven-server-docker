@@ -65,8 +65,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: edge
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -90,34 +88,25 @@ jobs:
         id: artifact_metadata
         run: |
           deephaven_version=$(< artifacts/build/version)
-          deephaven_checksum=$(sha256sum artifacts/server/jetty-app/build/distributions/server-jetty-${deephaven_version}.tar | awk -F " " '{print $1}')
           echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
-          echo "deephaven_checksum=${deephaven_checksum}" >> $GITHUB_OUTPUT
-
-      # Note: this is providing defaults that work when the event type is not workflow_dispatch
-      - name: Extract job metadata
-        id: job_metadata
-        run: |
-          echo "bake_targets=${{ github.event.inputs.bake_targets }}" >> $GITHUB_OUTPUT
-          echo "image_tag=${{ github.event.inputs.image_tag }}" >> $GITHUB_OUTPUT
 
       - name: Prepare artifacts
         run: |
-          mv artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar server-scratch/
-          mv artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl server/python/base/
-          echo "deephaven-core[autocomplete] @ file:///requirements/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl" > server/python/base/requirements.txt
+          cp artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl contexts/server/
+          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server/
+          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
-          targets: ${{ steps.job_metadata.outputs.bake_targets }}
+          targets: ${{ github.event.inputs.bake_targets }}
+          files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
           pull: true
-          push: ${{ github.event_name != 'pull_request' }}
           set: |
             *.cache-to=
         env:
-          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
+          DEEPHAVEN_SOURCES: custom
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
-          DEEPHAVEN_SHA256SUM: ${{ steps.artifact_metadata.outputs.deephaven_checksum }}
-          SERVER_SCRATCH_ TARGET: server-scratch-local
-          TAG: ${{ steps.job_metadata.outputs.image_tag }}
+          RELEASE: true
+          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
+          TAG: ${{ github.event.inputs.image_tag }}
