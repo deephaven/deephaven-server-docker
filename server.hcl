@@ -86,7 +86,7 @@ target "server" {
         equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}:${DEEPHAVEN_VERSION}" : ""
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server"
+        REQUIREMENTS_TYPE = "server"
     }
 }
 
@@ -99,7 +99,7 @@ target "server-all-ai" {
         equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-all-ai:${DEEPHAVEN_VERSION}" : ""
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-all-ai"
+        REQUIREMENTS_TYPE = "server-all-ai"
     }
 }
 
@@ -110,7 +110,7 @@ target "server-nltk" {
         equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-nltk:${DEEPHAVEN_VERSION}" : ""
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-nltk"
+        REQUIREMENTS_TYPE = "server-nltk"
     }
 }
 
@@ -121,7 +121,7 @@ target "server-pytorch" {
         equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-pytorch:${DEEPHAVEN_VERSION}" : ""
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-pytorch"
+        REQUIREMENTS_TYPE = "server-pytorch"
     }
 }
 
@@ -132,7 +132,7 @@ target "server-sklearn" {
         equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-sklearn:${DEEPHAVEN_VERSION}" : ""
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-sklearn"
+        REQUIREMENTS_TYPE = "server-sklearn"
     }
 }
 
@@ -143,7 +143,7 @@ target "server-tensorflow" {
         equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-tensorflow:${DEEPHAVEN_VERSION}" : ""
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-tensorflow"
+        REQUIREMENTS_TYPE = "server-tensorflow"
     }
 }
 

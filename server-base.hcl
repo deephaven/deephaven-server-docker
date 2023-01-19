@@ -75,7 +75,7 @@ target "server-base" {
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}:${TAG}"
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server"
+        REQUIREMENTS_TYPE = "server"
     }
 }
 
@@ -87,7 +87,7 @@ target "server-base-all-ai" {
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}-all-ai:${TAG}"
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-all-ai"
+        REQUIREMENTS_TYPE = "server-all-ai"
     }
 }
 
@@ -97,7 +97,7 @@ target "server-base-nltk" {
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}-nltk:${TAG}"
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-nltk"
+        REQUIREMENTS_TYPE = "server-nltk"
     }
 }
 
@@ -107,7 +107,7 @@ target "server-base-pytorch" {
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}-pytorch:${TAG}"
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-pytorch"
+        REQUIREMENTS_TYPE = "server-pytorch"
     }
 }
 
@@ -117,7 +117,7 @@ target "server-base-sklearn" {
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}-sklearn:${TAG}"
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-sklearn"
+        REQUIREMENTS_TYPE = "server-sklearn"
     }
 }
 
@@ -127,7 +127,7 @@ target "server-base-tensorflow" {
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}-tensorflow:${TAG}"
     ]
     args = {
-        "REQUIREMENTS_TYPE" = "server-tensorflow"
+        REQUIREMENTS_TYPE = "server-tensorflow"
     }
 }
 
