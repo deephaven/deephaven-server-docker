@@ -1,12 +1,8 @@
 name: Build CI
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
-  schedule:
-    - cron:  '0 19 * * *'
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
 concurrency: release
