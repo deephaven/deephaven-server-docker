@@ -99,9 +99,9 @@ jobs:
 
       - name: Prepare artifacts
         run: |
-          cp artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl server/
-          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar server/
-          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar server-slim/
+          cp artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl contexts/server/
+          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server/
+          cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
         uses: docker/bake-action@v2.3.0
