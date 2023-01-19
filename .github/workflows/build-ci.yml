@@ -39,3 +39,16 @@ jobs:
         env:
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
           RELEASE: ${{ github.event_name != 'pull_request' }}
+
+      - name: Bake
+        uses: docker/bake-action@v2.3.0
+        with:
+          targets: server,server-slim
+          files: server.hcl,server-slim.hcl
+          pull: true
+        env:
+          DEEPHAVEN_SOURCES: released
+          DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
+          RELEASE: ${{ github.event_name != 'pull_request' }}
+          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
+          TAG: latest

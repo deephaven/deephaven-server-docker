@@ -27,6 +27,7 @@ RUN \
         ca-certificates \
         locales \
         fontconfig \
+        curl \
         ; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8
@@ -64,7 +65,23 @@ LABEL \
 
 # -------------------------------------
 
-FROM libpython-bits as venv-bits
+# This stage is done later to help with earlier layer cacheability
+FROM libpython-bits as custom-bits
+ARG DEBIAN_FRONTEND="noninteractive"
+ARG TARGETARCH
+ARG UBUNTU_VERSION
+
+# curl is necessary for some kafka stuff (todo, document)
+RUN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    set -eux; \
+    apt-get -qq update; \
+    apt-get -qq -y --no-install-recommends install curl
+
+# -------------------------------------
+
+FROM custom-bits as venv-bits
 ARG PYTHON_VERSION
 ARG REQUIREMENTS_TYPE
 RUN \

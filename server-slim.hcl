@@ -79,7 +79,7 @@ target "server-slim" {
         DEEPHAVEN_SOURCES = DEEPHAVEN_SOURCES
     }
     cache-from = [
-        GITHUB_ACTIONS && RELEASE ? "type=gha,scope=${CACHE_PREFIX}" : ""
+        GITHUB_ACTIONS ? "type=gha,scope=${CACHE_PREFIX}" : ""
     ]
     cache-to = [
         GITHUB_ACTIONS && RELEASE ? "type=gha,mode=max,scope=${CACHE_PREFIX}" : ""

@@ -21,17 +21,22 @@ RUN \
     echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' | tee /etc/apt/apt.conf.d/keep-cache; \
     apt-get -qq update; \
     # fontconfig necessary until https://github.com/deephaven/deephaven-core/issues/3330 is fixed
-    # curl is necessary for some kafka stuff (todo, document)
     apt-get -qq -y --no-install-recommends install \
         liblzo2-2 \
         tzdata \
         ca-certificates \
         locales \
         fontconfig \
-        curl \
         ; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8
+# This run step is kept separate to be able to share the above shared RUN w/ server image
+RUN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    set -eux; \
+    # curl is necessary for some kafka stuff (todo, document)
+    apt-get -qq -y --no-install-recommends install curl
 ENV \
     LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
@@ -47,7 +52,23 @@ LABEL \
 
 # -------------------------------------
 
-FROM os-bits as openjdk-bits
+# This stage is done later to help with earlier layer cacheability
+FROM os-bits as custom-bits
+ARG DEBIAN_FRONTEND="noninteractive"
+ARG TARGETARCH
+ARG UBUNTU_VERSION
+
+# curl is necessary for some kafka stuff (todo, document)
+RUN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    set -eux; \
+    apt-get -qq update; \
+    apt-get -qq -y --no-install-recommends install curl
+
+# -------------------------------------
+
+FROM custom-bits as openjdk-bits
 ARG OPENJDK_VERSION
 COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
 ENV \
