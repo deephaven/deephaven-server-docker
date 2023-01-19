@@ -1,16 +1,16 @@
 group "default" {
     targets = [
-        "server-base"
+        "server"
     ]
 }
 
 group "extra" {
     targets = [
-        "server-base-all-ai",
-        "server-base-nltk",
-        "server-base-pytorch",
-        "server-base-sklearn",
-        "server-base-tensorflow"
+        "server-all-ai",
+        "server-nltk",
+        "server-pytorch",
+        "server-sklearn",
+        "server-tensorflow"
     ]
 }
 
@@ -20,12 +20,16 @@ variable "REPO_PREFIX" {
     default = "deephaven/"
 }
 
-variable "SERVER_BASE_PREFIX" {
-    default = "server-base"
+variable "SERVER_PREFIX" {
+    default = "server"
 }
 
 variable "CACHE_PREFIX" {
     default = "deephaven-server-docker-"
+}
+
+variable "DEEPHAVEN_VERSION" {
+    default = "0.21.0"
 }
 
 variable "OPENJDK_VERSION" {
@@ -41,11 +45,11 @@ variable "UBUNTU_VERSION" {
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
-    default = "0.4.14"
+    default = "0.4.15"
 }
 
 variable "TAG" {
-    default = "latest"
+    default = "edge"
 }
 
 variable "RELEASE" {
@@ -69,10 +73,10 @@ variable "GITHUB_ACTIONS" {
 
 # -------------------------------------
 
-target "server-base" {
-    inherits = [ "server-base-context" ]
+target "server" {
+    inherits = [ "server-context" ]
     tags = [
-        "${REPO_PREFIX}${SERVER_BASE_PREFIX}:${TAG}"
+        "${REPO_PREFIX}${SERVER_PREFIX}:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server"
@@ -81,50 +85,50 @@ target "server-base" {
 
 # -------------------------------------
 
-target "server-base-all-ai" {
-    inherits = [ "server-base-context" ]
+target "server-all-ai" {
+    inherits = [ "server-context" ]
     tags = [
-        "${REPO_PREFIX}${SERVER_BASE_PREFIX}-all-ai:${TAG}"
+        "${REPO_PREFIX}${SERVER_PREFIX}-all-ai:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-all-ai"
     }
 }
 
-target "server-base-nltk" {
-    inherits = [ "server-base-context" ]
+target "server-nltk" {
+    inherits = [ "server-context" ]
     tags = [
-        "${REPO_PREFIX}${SERVER_BASE_PREFIX}-nltk:${TAG}"
+        "${REPO_PREFIX}${SERVER_PREFIX}-nltk:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-nltk"
     }
 }
 
-target "server-base-pytorch" {
-    inherits = [ "server-base-context" ]
+target "server-pytorch" {
+    inherits = [ "server-context" ]
     tags = [
-        "${REPO_PREFIX}${SERVER_BASE_PREFIX}-pytorch:${TAG}"
+        "${REPO_PREFIX}${SERVER_PREFIX}-pytorch:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-pytorch"
     }
 }
 
-target "server-base-sklearn" {
-    inherits = [ "server-base-context" ]
+target "server-sklearn" {
+    inherits = [ "server-context" ]
     tags = [
-        "${REPO_PREFIX}${SERVER_BASE_PREFIX}-sklearn:${TAG}"
+        "${REPO_PREFIX}${SERVER_PREFIX}-sklearn:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-sklearn"
     }
 }
 
-target "server-base-tensorflow" {
-    inherits = [ "server-base-context" ]
+target "server-tensorflow" {
+    inherits = [ "server-context" ]
     tags = [
-        "${REPO_PREFIX}${SERVER_BASE_PREFIX}-tensorflow:${TAG}"
+        "${REPO_PREFIX}${SERVER_PREFIX}-tensorflow:${TAG}"
     ]
     args = {
         "REQUIREMENTS_TYPE" = "server-tensorflow"
@@ -133,9 +137,10 @@ target "server-base-tensorflow" {
 
 # -------------------------------------
 
-target "server-base-context" {
-    context = "contexts/server-base/"
+target "server-context" {
+    context = "contexts/server-edge/"
     args = {
+        "DEEPHAVEN_VERSION" = "${DEEPHAVEN_VERSION}"
         "OPENJDK_VERSION" = "${OPENJDK_VERSION}"
         "PYTHON_VERSION" = "${PYTHON_VERSION}"
         "UBUNTU_VERSION" = "${UBUNTU_VERSION}"

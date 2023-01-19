@@ -11,8 +11,8 @@ FROM docker.io/eclipse-temurin:${OPENJDK_VERSION} as openjdk
 
 FROM docker.io/library/busybox as deephaven
 ARG DEEPHAVEN_VERSION
-ADD --link https://github.com/deephaven/deephaven-core/releases/download/v${DEEPHAVEN_VERSION}/server-jetty-${DEEPHAVEN_VERSION}.tar .
 RUN \
+    --mount=type=bind,source=server-jetty-${DEEPHAVEN_VERSION}.tar,target=server-jetty-${DEEPHAVEN_VERSION}.tar \
     set -eux; \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
@@ -56,7 +56,47 @@ LABEL \
 
 # -------------------------------------
 
-FROM os-bits as openjdk-bits
+FROM os-bits as libpython-bits
+ARG DEBIAN_FRONTEND="noninteractive"
+ARG TARGETARCH
+ARG UBUNTU_VERSION
+ARG PYTHON_VERSION
+RUN \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
+    set -eux; \
+    apt-get -qq update; \
+    apt-get -qq -y --no-install-recommends install \
+        libpython${PYTHON_VERSION} \
+        python${PYTHON_VERSION} \
+        python${PYTHON_VERSION}-venv
+LABEL \
+    io.deephaven.server.python.version="${PYTHON_VERSION}"
+
+# -------------------------------------
+
+FROM libpython-bits as venv-bits
+ARG PYTHON_VERSION
+ARG REQUIREMENTS_TYPE
+ARG DEEPHAVEN_VERSION
+RUN \
+    --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements.txt \
+    --mount=type=bind,source=deephaven_core-${DEEPHAVEN_VERSION}-py3-none-any.whl,target=deephaven_core-${DEEPHAVEN_VERSION}-py3-none-any.whl \
+    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+    set -eux; \
+    mkdir -p /opt/deephaven; \
+    python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
+    /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: "deephaven_core-${DEEPHAVEN_VERSION}-py3-none-any.whl[autocomplete]" -r requirements.txt
+ENV \
+    VIRTUAL_ENV="/opt/deephaven/venv" \
+    PATH="/opt/deephaven/venv/bin:${PATH}"
+LABEL \
+    io.deephaven.server.python.requirements.type="${REQUIREMENTS_TYPE}"
+
+# -------------------------------------
+
+FROM venv-bits as openjdk-bits
 ARG OPENJDK_VERSION
 COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
 ENV \
@@ -86,7 +126,7 @@ LABEL \
 
 # -------------------------------------
 
-FROM grpc-health-probe-bits as server-slim
+FROM grpc-health-probe-bits as server
 COPY --link deephaven.prop /opt/deephaven/config/deephaven.prop
 EXPOSE 10000
 VOLUME /data
@@ -98,7 +138,7 @@ ENV \
 ENTRYPOINT ["/opt/deephaven/server-jetty/bin/start"]
 HEALTHCHECK --interval=3s --retries=3 --timeout=11s CMD /opt/grpc_health_probe/grpc_health_probe -addr=localhost:10000 -connect-timeout=10s || exit 1
 LABEL \
-    io.deephaven.image.type="server-slim" \
-    org.opencontainers.image.title="Deephaven Server Slim" \
-    org.opencontainers.image.description="Deephaven Server Slim" \
+    io.deephaven.image.type="server" \
+    org.opencontainers.image.title="Deephaven Server" \
+    org.opencontainers.image.description="Deephaven Server" \
     org.opencontainers.image.version="${DEEPHAVEN_VERSION}"

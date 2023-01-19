@@ -89,9 +89,7 @@ jobs:
       - name: Extract artifact metadata
         id: artifact_metadata
         run: |
-          deephaven_version=$(< artifacts/build/version)
           deephaven_checksum=$(sha256sum artifacts/server/jetty-app/build/distributions/server-jetty-${deephaven_version}.tar | awk -F " " '{print $1}')
-          echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
           echo "deephaven_checksum=${deephaven_checksum}" >> $GITHUB_OUTPUT
 
       # Note: this is providing defaults that work when the event type is not workflow_dispatch
@@ -110,14 +108,14 @@ jobs:
       - name: Bake
         uses: docker/bake-action@v2.3.0
         with:
+          targets: 
           targets: ${{ steps.job_metadata.outputs.bake_targets }}
+          files: server.hcl,server-slim.hcl
           pull: true
-          push: ${{ github.event_name != 'pull_request' }}
           set: |
             *.cache-to=
         env:
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
-          DEEPHAVEN_SHA256SUM: ${{ steps.artifact_metadata.outputs.deephaven_checksum }}
-          SERVER_SCRATCH_ TARGET: server-scratch-local
           TAG: ${{ steps.job_metadata.outputs.image_tag }}
+          RELEASE: ${{ github.event_name != 'pull_request' }}

@@ -20,11 +20,14 @@ RUN \
     rm -f /etc/apt/apt.conf.d/docker-clean; \
     echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' | tee /etc/apt/apt.conf.d/keep-cache; \
     apt-get -qq update; \
+    # fontconfig necessary until https://github.com/deephaven/deephaven-core/issues/3330 is fixed
     apt-get -qq -y --no-install-recommends install \
         liblzo2-2 \
         tzdata \
         ca-certificates \
-        locales; \
+        locales \
+        fontconfig \
+        ; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8
 ENV \

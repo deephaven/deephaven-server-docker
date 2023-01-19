@@ -34,11 +34,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Bake (release)
+      - name: Bake server and server-slim
         uses: docker/bake-action@v2.3.0
         with:
-          targets: release
+          targets: server,server-slim
+          files: server.hcl,server-slim.hcl
           pull: true
-          push: ${{ github.event_name != 'pull_request' }}
         env:
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
+          RELEASE: ${{ github.event_name != 'pull_request' }}

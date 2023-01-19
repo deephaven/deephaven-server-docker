@@ -10,7 +10,7 @@ variable "REPO_PREFIX" {
     default = "deephaven/"
 }
 
-variable "IMAGE_PREFIX" {
+variable "SERVER_SLIM_BASE_PREFIX" {
     default = "server-slim-base"
 }
 
@@ -56,16 +56,10 @@ variable "GITHUB_ACTIONS" {
 # -------------------------------------
 
 target "server-slim-base" {
-    inherits = [ "shared-context" ]
-    tags = [
-        "${REPO_PREFIX}${IMAGE_PREFIX}:${TAG}"
-    ]
-}
-
-# -------------------------------------
-
-target "shared-context" {
     context = "contexts/server-slim-base/"
+    tags = [
+        "${REPO_PREFIX}${SERVER_SLIM_BASE_PREFIX}:${TAG}"
+    ]
     args = {
         "OPENJDK_VERSION" = "${OPENJDK_VERSION}"
         "UBUNTU_VERSION" = "${UBUNTU_VERSION}"
