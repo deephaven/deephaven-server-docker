@@ -76,7 +76,7 @@ RUN \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     set -eux; \
     apt-get -qq update; \
-    apt-get -qq -y --no-install-recommends install curl
+    apt-get -qq -y --no-install-recommends install curl odbc-postgresql g++ libboost-all-dev unixodbc-dev 
 
 # -------------------------------------
 
@@ -91,7 +91,9 @@ RUN \
     mkdir -p /opt/deephaven; \
     python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
     /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
-    /opt/deephaven/venv/bin/pip install --only-binary=:all: -r requirements.txt -r requirements-2.txt
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: -r requirements.txt -r requirements-2.txt; \
+    /opt/deephaven/venv/bin/pip install adbc-driver-manager adbc-driver-postgresql; \
+    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" /opt/deephaven/venv/bin/pip install turbodbc
 ENV \
     VIRTUAL_ENV="/opt/deephaven/venv" \
     PATH="/opt/deephaven/venv/bin:${PATH}"
