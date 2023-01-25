@@ -71,7 +71,7 @@ ARG TARGETARCH
 ARG UBUNTU_VERSION
 
 # curl is necessary for some kafka stuff (todo, document)
-# odbc-postgresql is necessary for adbc-driver-postgresql, and others? (todo: should this be )
+# odbc-postgresql for postgres support out-of-the-box
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
@@ -84,17 +84,16 @@ RUN \
 FROM custom-bits as venv-bits
 ARG PYTHON_VERSION
 ARG REQUIREMENTS_TYPE
-COPY --link --from=turbodbc-wheel /wheels /wheels
 RUN \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements-2.txt \
+    --mount=type=bind,from=turbodbc-wheel,source=/wheels,target=/wheels \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     mkdir -p /opt/deephaven; \
     python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
     /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
-    /opt/deephaven/venv/bin/pip install --only-binary=:all: --find-links /wheels -r requirements.txt -r requirements-2.txt; \
-    rm -r /wheels
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: --find-links /wheels -r requirements.txt -r requirements-2.txt
 ENV \
     VIRTUAL_ENV="/opt/deephaven/venv" \
     PATH="/opt/deephaven/venv/bin:${PATH}"

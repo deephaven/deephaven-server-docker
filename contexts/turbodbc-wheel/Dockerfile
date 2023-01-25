@@ -17,7 +17,8 @@ RUN \
 # CFLAGS fixes https://github.com/blue-yonder/turbodbc/issues/375
 RUN \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
-    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel -w /wheels turbodbc
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel -w /wheels -r requirements.txt
 
 FROM scratch
 COPY --link --from=build /wheels /wheels
