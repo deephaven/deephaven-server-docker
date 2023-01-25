@@ -71,18 +71,20 @@ ARG TARGETARCH
 ARG UBUNTU_VERSION
 
 # curl is necessary for some kafka stuff (todo, document)
+# odbc-postgresql is necessary for adbc-driver-postgresql, and others? (todo: should this be )
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     set -eux; \
     apt-get -qq update; \
-    apt-get -qq -y --no-install-recommends install curl odbc-postgresql g++ libboost-all-dev unixodbc-dev 
+    apt-get -qq -y --no-install-recommends install curl odbc-postgresql
 
 # -------------------------------------
 
 FROM custom-bits as venv-bits
 ARG PYTHON_VERSION
 ARG REQUIREMENTS_TYPE
+COPY --link --from=turbodbc-wheel /wheels /wheels
 RUN \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements-2.txt \
@@ -91,9 +93,8 @@ RUN \
     mkdir -p /opt/deephaven; \
     python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
     /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
-    /opt/deephaven/venv/bin/pip install --only-binary=:all: -r requirements.txt -r requirements-2.txt; \
-    /opt/deephaven/venv/bin/pip install adbc-driver-manager adbc-driver-postgresql; \
-    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" /opt/deephaven/venv/bin/pip install turbodbc
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: --find-links /wheels -r requirements.txt -r requirements-2.txt; \
+    rm -r /wheels
 ENV \
     VIRTUAL_ENV="/opt/deephaven/venv" \
     PATH="/opt/deephaven/venv/bin:${PATH}"

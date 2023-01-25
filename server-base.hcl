@@ -71,6 +71,9 @@ variable "GITHUB_ACTIONS" {
 
 target "server-base" {
     inherits = [ "server-base-context" ]
+    contexts = {
+        turbodbc-wheel = "target:turbodbc-wheel"
+    }
     tags = [
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}:${TAG}"
     ]
@@ -154,6 +157,15 @@ target "server-base-context" {
     output = [
         RELEASE ? "type=registry" : ""
     ]
+}
+
+# -------------------------------------
+
+target "turbodbc-wheel" {
+    context = "contexts/turbodbc-wheel/"
+    args = {
+        PYTHON_VERSION = PYTHON_VERSION
+    }
 }
 
 # -------------------------------------
