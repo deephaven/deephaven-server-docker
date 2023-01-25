@@ -14,11 +14,24 @@ RUN \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install libboost-all-dev unixodbc-dev
 
-# CFLAGS fixes https://github.com/blue-yonder/turbodbc/issues/375
 RUN \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel -w /wheels -r requirements.txt
+    pip install -r requirements.txt
+
+# CFLAGS fixes https://github.com/blue-yonder/turbodbc/issues/375
+RUN \
+    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel --no-deps -w /wheels-tmp turbodbc
+
+RUN \
+    --mount=type=bind,source=auditwheel-keep.py,target=auditwheel-keep.py \
+    python auditwheel-keep.py \
+        repair \
+        --plat manylinux_2_35_x86_64 \
+        --only-plat \
+        --wheel-dir /wheels \
+        /wheels-tmp/turbo*
 
 FROM scratch
 COPY --link --from=build /wheels /wheels

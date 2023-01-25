@@ -1,1 +1,9 @@
-turbodbc
+wheel
+auditwheel
+patchelf
+
+# hack to ensure turbodbc builds numpy bindings
+numpy
+
+# hack to ensure turbodbc builds pyarrow bindings
+pyarrow

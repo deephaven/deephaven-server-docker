@@ -77,7 +77,7 @@ RUN \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     set -eux; \
     apt-get -qq update; \
-    apt-get -qq -y --no-install-recommends install curl odbc-postgresql
+    apt-get -qq -y --no-install-recommends install curl odbc-postgresql unixodbc
 
 # -------------------------------------
 
