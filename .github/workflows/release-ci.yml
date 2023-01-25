@@ -36,5 +36,6 @@ jobs:
           files: server.hcl,server-slim.hcl
           pull: true
         env:
+          MULTI_ARCH: true
           RELEASE: ${{ startsWith(github.ref, 'refs/heads/release/v') }}
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
