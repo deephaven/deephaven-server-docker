@@ -71,9 +71,6 @@ variable "GITHUB_ACTIONS" {
 
 target "server-base" {
     inherits = [ "server-base-context" ]
-    contexts = {
-        turbodbc-wheel = "target:turbodbc-wheel"
-    }
     tags = [
         "${REPO_PREFIX}${SERVER_BASE_PREFIX}:${TAG}"
     ]
@@ -138,6 +135,9 @@ target "server-base-tensorflow" {
 
 target "server-base-context" {
     context = "contexts/server-base/"
+    contexts = {
+        turbodbc-wheel = "target:turbodbc-wheel"
+    }
     args = {
         OPENJDK_VERSION = OPENJDK_VERSION
         PYTHON_VERSION = PYTHON_VERSION
@@ -166,6 +166,10 @@ target "turbodbc-wheel" {
     args = {
         PYTHON_VERSION = PYTHON_VERSION
     }
+    platforms = [
+        MULTI_ARCH || RELEASE ? "linux/amd64" : "",
+        MULTI_ARCH || RELEASE ? "linux/arm64" : "",
+    ]
 }
 
 # -------------------------------------
