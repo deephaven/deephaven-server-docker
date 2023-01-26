@@ -25,13 +25,13 @@ RUN \
     CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel --no-deps -w /wheels-tmp turbodbc
 
 RUN \
-    --mount=type=bind,source=auditwheel-keep.py,target=auditwheel-keep.py \
-    python auditwheel-keep.py \
+    --mount=type=bind,source=auditwheel-keep-pyarrow.py,target=auditwheel-keep-pyarrow.py \
+    python auditwheel-keep-pyarrow.py \
         repair \
         --plat manylinux_2_35_x86_64 \
         --only-plat \
         --wheel-dir /wheels \
-        /wheels-tmp/turbo*
+        /wheels-tmp/turbodbc*
 
 FROM scratch
 COPY --link --from=build /wheels /wheels
