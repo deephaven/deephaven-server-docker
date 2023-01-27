@@ -51,7 +51,7 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 
-# curl is necessary for some kafka stuff (todo, document)
+# curl is necessary for some kafka integration testing
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \

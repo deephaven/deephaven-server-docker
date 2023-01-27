@@ -10,10 +10,19 @@ numpy
 pandas
 pyarrow
 numba; python_version < "3.11"
-jedi==0.18.2
 
 # deephaven-core also expects wheel to be installed...
 wheel
 
 # some extra utilities
 java-utilities
+
+# optional autocomplete feature
+jedi==0.18.2
+
+# optional adbc feature
+adbc-driver-manager
+adbc-driver-postgresql
+
+# optional turbodbc feature
+turbodbc
