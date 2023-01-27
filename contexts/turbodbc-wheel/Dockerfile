@@ -28,7 +28,7 @@ RUN \
     --mount=type=bind,source=auditwheel-keep-pyarrow.py,target=auditwheel-keep-pyarrow.py \
     python auditwheel-keep-pyarrow.py \
         repair \
-        --plat manylinux_2_35_x86_64 \
+        --plat manylinux_2_35_$(uname -m) \
         --only-plat \
         --wheel-dir /wheels \
         /wheels-tmp/turbodbc*
