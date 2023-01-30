@@ -17,12 +17,13 @@ RUN \
 RUN \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    set -eux; \
     pip install -r requirements.txt
 
 # CFLAGS fixes https://github.com/blue-yonder/turbodbc/issues/375
 RUN \
-    --mount=type=cache,target=/root/.cache/pip,sharing=locked \
-    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel --no-deps -w /wheels-tmp turbodbc
+    set -eux; \
+    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel --no-cache-dir -w /wheels-tmp turbodbc
 
 RUN \
     --mount=type=bind,source=auditwheel-keep-pyarrow.py,target=auditwheel-keep-pyarrow.py \
