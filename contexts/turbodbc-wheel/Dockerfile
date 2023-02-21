@@ -20,7 +20,6 @@ RUN \
     set -eux; \
     pip install -r requirements.txt
 
-# CFLAGS fixes https://github.com/blue-yonder/turbodbc/issues/375
 RUN \
     set -eux; \
     pip wheel --no-cache-dir -w /wheels-tmp turbodbc
