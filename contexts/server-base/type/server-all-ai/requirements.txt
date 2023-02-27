@@ -3,7 +3,7 @@ jpy>=0.13.0
 deephaven-plugin
 numpy
 pandas
-pyarrow<10
+pyarrow
 numba; python_version < "3.11"
 jedi==0.18.2
 nltk
