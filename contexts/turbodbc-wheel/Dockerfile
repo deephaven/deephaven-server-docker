@@ -20,9 +20,10 @@ RUN \
     set -eux; \
     pip install -r requirements.txt
 
+# CFLAGS is still needed to work around https://github.com/blue-yonder/turbodbc/issues/384
 RUN \
     set -eux; \
-    pip wheel --no-cache-dir -w /wheels-tmp turbodbc
+    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel --no-cache-dir -w /wheels-tmp turbodbc
 
 RUN \
     --mount=type=bind,source=auditwheel-keep-pyarrow.py,target=auditwheel-keep-pyarrow.py \

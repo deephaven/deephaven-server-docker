@@ -26,3 +26,6 @@ adbc-driver-postgresql
 
 # optional turbodbc feature
 turbodbc
+
+# optional connectorx feature for x86_64 arch only, no Linux/arm64 wheel yet
+connectorx; platform.machine == 'x86_64'
