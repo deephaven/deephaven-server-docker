@@ -4,7 +4,7 @@ deephaven-plugin
 numpy
 pandas
 pyarrow
-numba; python_version < "3.11"
+numba; python_version < "3.12"
 jedi==0.18.2
 nltk
 tensorflow

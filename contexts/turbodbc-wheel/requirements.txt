@@ -6,5 +6,5 @@ patchelf
 numpy
 
 # hack to ensure turbodbc builds pyarrow bindings
-# auditwheel-keep-pyarrow.py is targeting pyarrow 11
-pyarrow==11.0.0
+# auditwheel-keep-pyarrow.py is targeting pyarrow 12
+pyarrow==12.0.0
