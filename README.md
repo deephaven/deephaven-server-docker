@@ -60,6 +60,10 @@ docker buildx bake -f server.hcl server-all-ai
 
 See the various hcl files for parameterization options.
 
+## Release
+
+See [RELEASE](RELEASE.md).
+
 ## Resources
 
 * [Issues](https://github.com/deephaven/deephaven-server-docker/issues)
