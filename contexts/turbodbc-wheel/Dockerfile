@@ -18,12 +18,14 @@ RUN \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     set -eux; \
-    pip install -r requirements.txt
+    pip install --only-binary=:all: -r requirements.txt
 
 # CFLAGS is still needed to work around https://github.com/blue-yonder/turbodbc/issues/384
+# Ensure requirements.txt is updated whenever turbodbc version bumped
 RUN \
     set -eux; \
-    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" pip wheel --no-cache-dir -w /wheels-tmp turbodbc
+    CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
+    pip wheel --no-cache-dir -w /wheels-tmp turbodbc==4.6.0
 
 RUN \
     --mount=type=bind,source=auditwheel-keep-pyarrow.py,target=auditwheel-keep-pyarrow.py \

@@ -2,8 +2,12 @@ wheel
 auditwheel
 patchelf
 
+# The following requirements are copied from turbodbc/setup.py setup_requires
+
 # hack to ensure turbodbc builds numpy bindings
-numpy
+numpy>=1.20
+
+pybind11>=2.10.4
 
 # hack to ensure turbodbc builds pyarrow bindings
 # auditwheel-keep-pyarrow.py is targeting pyarrow 12
