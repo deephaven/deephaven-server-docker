@@ -37,7 +37,7 @@ variable "UBUNTU_VERSION" {
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
-    default = "0.4.18"
+    default = "0.4.19"
 }
 
 variable "TAG" {
