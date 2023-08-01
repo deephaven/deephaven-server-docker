@@ -1,5 +1,5 @@
 # Note: this is targetted as the dependencies of deephaven-core, but not including deephaven-core
-jpy>=0.13.0
+jpy>=0.14.0
 deephaven-plugin
 numpy
 pandas
