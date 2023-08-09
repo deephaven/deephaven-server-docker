@@ -1,8 +1,8 @@
 # Note: this is targetted as the dependencies of deephaven-core, but not including deephaven-core
 jpy>=0.14.0
-deephaven-plugin
+deephaven-plugin>=0.4.0
 numpy
-pandas
+pandas>=1.5.0
 pyarrow
 numba; python_version < "3.12"
 jedi==0.18.2
