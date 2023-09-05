@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout deephaven-core
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: deephaven/deephaven-core
           ref: ${{ github.event.inputs.deephaven_core_ref }}
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
