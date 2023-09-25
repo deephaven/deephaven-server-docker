@@ -162,7 +162,15 @@ LABEL \
 
 # -------------------------------------
 
-FROM grpc-health-probe-bits as server
+FROM ghcr.io/deephaven/web-plugin-packager:latest as js-build
+RUN ./pack-plugins.sh @deephaven/js-plugin-ui
+
+FROM grpc-health-probe-bits as js-plugins
+COPY --link --from=js-build /js-plugins /js-plugins
+
+# -------------------------------------
+
+FROM js-plugins as server
 COPY --link deephaven.prop /opt/deephaven/config/deephaven.prop
 EXPOSE 10000
 VOLUME /data
