@@ -166,7 +166,7 @@ FROM ghcr.io/deephaven/web-plugin-packager:latest as js-build
 RUN ./pack-plugins.sh @deephaven/js-plugin-ui
 
 FROM grpc-health-probe-bits as js-plugins
-COPY --link --from=js-build /js-plugins /js-plugins
+COPY --link --from=js-build /js-plugins /opt/deephaven/config/js-plugins
 
 # -------------------------------------
 
