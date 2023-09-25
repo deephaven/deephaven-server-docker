@@ -1,1 +1,2 @@
 deephaven-plugin-ui
+deephaven-plugin-plotly-express
