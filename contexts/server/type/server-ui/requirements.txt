@@ -1,2 +1,2 @@
-deephaven-plugin-ui
+deephaven-plugin-ui==0.0.1.dev1
 deephaven-plugin-plotly-express
