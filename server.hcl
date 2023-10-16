@@ -43,11 +43,11 @@ variable "OPENJDK_VERSION" {
 }
 
 variable "PYTHON_VERSION" {
-    default = "3.10"
+    default = "3.11"
 }
 
 variable "UBUNTU_VERSION" {
-    default = "22.04"
+    default = "23.04"
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
