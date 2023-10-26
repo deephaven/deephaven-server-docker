@@ -29,7 +29,7 @@ variable "DEEPHAVEN_VERSION" {
 }
 
 variable "OPENJDK_VERSION" {
-    default = "17"
+    default = "21"
 }
 
 variable "UBUNTU_VERSION" {
