@@ -35,7 +35,7 @@ variable "DEEPHAVEN_SOURCES" {
 }
 
 variable "DEEPHAVEN_VERSION" {
-    default = "0.29.1"
+    default = "0.30.0"
 }
 
 variable "OPENJDK_VERSION" {
