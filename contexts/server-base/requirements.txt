@@ -25,7 +25,8 @@ adbc-driver-manager
 adbc-driver-postgresql
 
 # optional turbodbc feature
-turbodbc
+# We are adding the arrow/numpy extra requirements to make sure pip installs compatible versions
+turbodbc[arrow,numpy]==4.7.0
 
 # optional connectorx feature for x86_64 arch only, no Linux/arm64 wheel yet
 connectorx; platform.machine == 'x86_64'
