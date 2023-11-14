@@ -23,7 +23,7 @@ RUN \
 # Ensure requirements.txt is updated whenever turbodbc version bumped
 RUN \
     set -eux; \
-    pip wheel --no-cache-dir -w /wheels-tmp turbodbc==4.7.0
+    pip wheel --no-cache-dir -w /wheels-tmp turbodbc==4.8.0
 
 RUN \
     --mount=type=bind,source=auditwheel-keep-pyarrow.py,target=auditwheel-keep-pyarrow.py \
