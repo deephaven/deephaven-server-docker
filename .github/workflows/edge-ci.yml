@@ -87,7 +87,7 @@ jobs:
         id: artifact_metadata
         run: |
           deephaven_version=$(< artifacts/build/version)
-          deephaven_core_wheel=$(find py/server/build/wheel -type f -name "*.whl" | xargs -n 1 basename)
+          deephaven_core_wheel=$(find artifacts/py/server/build/wheel -type f -name "*.whl" | xargs -n 1 basename)
           echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
           echo "deephaven_core_wheel=${deephaven_core_wheel}" >> $GITHUB_OUTPUT
 
