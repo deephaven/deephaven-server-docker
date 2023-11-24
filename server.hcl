@@ -38,6 +38,10 @@ variable "DEEPHAVEN_VERSION" {
     default = "0.30.1"
 }
 
+variable "DEEPHAVEN_CORE_WHEEL" {
+    default = ""
+}
+
 variable "OPENJDK_VERSION" {
     default = "21"
 }
@@ -153,6 +157,7 @@ target "server-context" {
     context = "contexts/server/"
     args = {
         DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
+        DEEPHAVEN_CORE_WHEEL = DEEPHAVEN_CORE_WHEEL
         OPENJDK_VERSION = OPENJDK_VERSION
         PYTHON_VERSION = PYTHON_VERSION
         UBUNTU_VERSION = UBUNTU_VERSION

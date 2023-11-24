@@ -87,11 +87,13 @@ jobs:
         id: artifact_metadata
         run: |
           deephaven_version=$(< artifacts/build/version)
+          deephaven_core_wheel=$(find artifacts/py/server/build/wheel -type f -name "*.whl" | xargs -n 1 basename)
           echo "deephaven_version=${deephaven_version}" >> $GITHUB_OUTPUT
+          echo "deephaven_core_wheel=${deephaven_core_wheel}" >> $GITHUB_OUTPUT
 
       - name: Prepare artifacts
         run: |
-          cp artifacts/py/server/build/wheel/deephaven_core-${{ steps.artifact_metadata.outputs.deephaven_version }}-py3-none-any.whl contexts/server/
+          cp artifacts/py/server/build/wheel/${{ steps.artifact_metadata.outputs.deephaven_core_wheel }} contexts/server/
           cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server/
           cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
@@ -104,6 +106,7 @@ jobs:
         env:
           DEEPHAVEN_SOURCES: custom
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
+          DEEPHAVEN_CORE_WHEEL: ${{ steps.artifact_metadata.outputs.deephaven_core_wheel }}
           MULTI_ARCH: true
           RELEASE: ${{ github.event_name != 'pull_request' }}
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
