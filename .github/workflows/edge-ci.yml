@@ -46,7 +46,7 @@ jobs:
           arguments: --scan outputVersion server-jetty-app:assemble py-server:assemble
           gradle-version: wrapper
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: assemble-deephaven-core
           path: |
