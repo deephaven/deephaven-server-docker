@@ -25,12 +25,13 @@ RUN \
     set -eux; \
     pip wheel --no-cache-dir -w /wheels-tmp turbodbc==4.8.0
 
-RUN \
-    --mount=type=bind,source=auditwheel-keep-pyarrow.py,target=auditwheel-keep-pyarrow.py \
-    python auditwheel-keep-pyarrow.py \
+RUN set -eux; \
+    auditwheel \
         repair \
         --plat manylinux_2_35_$(uname -m) \
         --only-plat \
+        --exclude libarrow_python.so \
+        --exclude libarrow.so.1400 \
         --wheel-dir /wheels \
         /wheels-tmp/turbodbc*
 

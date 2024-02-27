@@ -1,5 +1,5 @@
 wheel
-auditwheel
+auditwheel>=6.0.0
 patchelf
 
 # The following requirements are copied from turbodbc/setup.py setup_requires
@@ -10,5 +10,5 @@ numpy>=1.20
 pybind11>=2.10.4
 
 # hack to ensure turbodbc builds pyarrow bindings
-# auditwheel-keep-pyarrow.py is targeting pyarrow 13
+# Ensure this is compatible with the auditwheel --exclude
 pyarrow==14.0.1
