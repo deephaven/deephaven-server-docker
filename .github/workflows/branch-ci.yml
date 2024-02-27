@@ -45,8 +45,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Assemble distribution
-        with:
-          job-id: build-server
         run: ./gradlew outputVersion server-jetty-app:assemble py-server:assemble
 
       - uses: actions/upload-artifact@v4
