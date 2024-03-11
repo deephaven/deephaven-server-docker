@@ -33,7 +33,7 @@ variable "OPENJDK_VERSION" {
 }
 
 variable "PYTHON_VERSION" {
-    default = "3.10"
+    default = "3.8"
 }
 
 variable "UBUNTU_VERSION" {
@@ -135,9 +135,9 @@ target "server-base-tensorflow" {
 
 target "server-base-context" {
     context = "contexts/server-base/"
-    contexts = {
-        turbodbc-wheel = "target:turbodbc-wheel"
-    }
+    // contexts = {
+    //     turbodbc-wheel = "target:turbodbc-wheel"
+    // }
     args = {
         OPENJDK_VERSION = OPENJDK_VERSION
         PYTHON_VERSION = PYTHON_VERSION
