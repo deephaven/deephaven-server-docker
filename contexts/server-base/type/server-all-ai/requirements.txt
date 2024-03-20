@@ -1,5 +1,5 @@
 # Note: this is targetted as the dependencies of deephaven-core, but not including deephaven-core
-jpy>=0.15.0
+jpy>=0.16.0
 deephaven-plugin>=0.5.0
 numpy
 pandas>=1.5.0
