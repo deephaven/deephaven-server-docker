@@ -39,12 +39,11 @@ jobs:
           .github/scripts/gradle-properties.sh >> gradle.properties
           cat gradle.properties
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Assemble distribution
-        uses: burrunan/gradle-cache-action@v1
-        with:
-          job-id: build-server
-          arguments: --scan outputVersion server-jetty-app:assemble py-server:assemble
-          gradle-version: wrapper
+        run: ./gradlew outputVersion server-jetty-app:assemble py-server:assemble
 
       - uses: actions/upload-artifact@v4
         with:
