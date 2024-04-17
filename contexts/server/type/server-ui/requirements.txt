@@ -1,0 +1,3 @@
+deephaven-plugin-matplotlib>=0.3.0
+deephaven-plugin-plotly-express>=0.7.0
+deephaven-plugin-ui>=0.12.0
