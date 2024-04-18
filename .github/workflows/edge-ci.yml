@@ -99,7 +99,7 @@ jobs:
       - name: Bake
         uses: docker/bake-action@v4.3.0
         with:
-          targets: server,server-slim,server-base,server-slim-base
+          targets: server,server-slim,server-base,server-slim-base,server-ui
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
           pull: true
         env:
