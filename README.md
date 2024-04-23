@@ -27,6 +27,7 @@ The following server images are currently being produced:
 * `ghcr.io/deephaven/server-pytorch:0.33.2`
 * `ghcr.io/deephaven/server-sklearn:0.33.2`
 * `ghcr.io/deephaven/server-tensorflow:0.33.2`
+* `ghcr.io/deephaven/server-ui:0.33.2`
 
 ### Linux
 
