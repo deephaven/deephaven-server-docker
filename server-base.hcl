@@ -8,11 +8,11 @@ group "default" {
 # explicitly depend on deephaven-core.
 group "extra" {
     targets = [
-        "server-base-all-ai",
+        //"server-base-all-ai",
         "server-base-nltk",
         "server-base-pytorch",
         "server-base-sklearn",
-        "server-base-tensorflow"
+        //"server-base-tensorflow"
     ]
 }
 
