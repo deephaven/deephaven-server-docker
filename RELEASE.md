@@ -83,8 +83,7 @@ In cases where that's not true, there's a good chance that care may be needed to
 In the case of a patch release, the branch may, or may not, be fast-forwardable.
 Use care, and ensure any merge conflicts are handled appropriately before pushing.
 
-[!CAUTION]
-If the release is a patch on an older release (i.e. not the latest), do not merge the release branch.
+> :warning: If the release is a patch on an older release (i.e. not the latest), do not merge the release branch.
 
 ```shell
 $ git checkout main
