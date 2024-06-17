@@ -71,7 +71,7 @@ ARG TARGETARCH
 ARG UBUNTU_VERSION
 
 # curl is necessary for some kafka integration testing
-# unixodbc, odbc-postgresql for postgres  / turbodbc integration testing
+# unixodbc, odbc-postgresql for postgres integration testing
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
@@ -87,7 +87,6 @@ ARG REQUIREMENTS_TYPE
 RUN \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements-2.txt \
-    --mount=type=bind,from=turbodbc-wheel,source=/wheels,target=/wheels \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     mkdir -p /opt/deephaven; \
