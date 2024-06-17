@@ -23,7 +23,7 @@ RUN \
 # Ensure requirements.txt is updated whenever turbodbc version bumped
 RUN \
     set -eux; \
-    pip wheel --no-cache-dir -w /wheels-tmp turbodbc==4.8.0
+    pip wheel --no-cache-dir -w /wheels-tmp turbodbc==4.12.1
 
 RUN set -eux; \
     auditwheel \
@@ -31,7 +31,7 @@ RUN set -eux; \
         --plat manylinux_2_35_$(uname -m) \
         --only-plat \
         --exclude libarrow_python.so \
-        --exclude libarrow.so.1400 \
+        --exclude libarrow.so.1600 \
         --wheel-dir /wheels \
         /wheels-tmp/turbodbc*
 

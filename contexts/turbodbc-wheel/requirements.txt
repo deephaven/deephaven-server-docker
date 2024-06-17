@@ -11,4 +11,4 @@ pybind11>=2.10.4
 
 # hack to ensure turbodbc builds pyarrow bindings
 # Ensure this is compatible with the auditwheel --exclude
-pyarrow==14.0.1
+pyarrow==16.1.0
