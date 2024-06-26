@@ -6,11 +6,11 @@ group "default" {
 
 group "extra" {
     targets = [
-        //"server-all-ai",
-        "server-nltk",
-        "server-pytorch",
-        "server-sklearn",
-        //"server-tensorflow",
+        // "server-all-ai",
+        // "server-nltk",
+        // "server-pytorch",
+        // "server-sklearn",
+        // "server-tensorflow",
         "server-ui"
     ]
 }
