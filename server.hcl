@@ -36,7 +36,7 @@ variable "DEEPHAVEN_SOURCES" {
 }
 
 variable "DEEPHAVEN_VERSION" {
-    default = "0.34.1"
+    default = "0.34.3"
 }
 
 variable "DEEPHAVEN_CORE_WHEEL" {
@@ -56,7 +56,7 @@ variable "UBUNTU_VERSION" {
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
-    default = "0.4.24"
+    default = "0.4.28"
 }
 
 variable "TAG" {
