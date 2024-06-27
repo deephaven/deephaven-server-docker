@@ -5,7 +5,7 @@ numpy
 pandas>=1.5.0
 pyarrow
 numba; python_version < "3.12"
-jedi==0.18.2
+jedi==0.19.1
 nltk
 tensorflow
 torch

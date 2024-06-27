@@ -18,7 +18,7 @@ wheel
 java-utilities
 
 # optional autocomplete feature
-jedi==0.18.2
+jedi==0.19.1
 
 # optional adbc feature
 adbc-driver-manager
