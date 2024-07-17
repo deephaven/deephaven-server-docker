@@ -17,7 +17,7 @@ jobs:
       # Forks don't need to run the scheduled cron
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout deephaven-core
         uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
     needs: assemble-deephaven-core
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -97,7 +97,7 @@ jobs:
           cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
-        uses: docker/bake-action@v5.1.0
+        uses: docker/bake-action@v5.4.0
         with:
           targets: server,server-slim,server-base,server-slim-base,server-ui
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
