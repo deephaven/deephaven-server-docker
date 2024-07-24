@@ -36,7 +36,7 @@ variable "DEEPHAVEN_SOURCES" {
 }
 
 variable "DEEPHAVEN_VERSION" {
-    default = "0.35.1"
+    default = "0.35.2"
 }
 
 variable "DEEPHAVEN_CORE_WHEEL" {
