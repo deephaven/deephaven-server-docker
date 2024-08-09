@@ -34,7 +34,9 @@ jobs:
           java-version: '11'
 
       - name: Set JAVA_HOME
-        run: echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
+        run: |
+          echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
+          echo "COMMIT_HASH=${{ GITHUB_SHA }} " >> $GITHUB_OUTPUT
 
       - name: Setup gradle properties
         run: |
@@ -110,4 +112,5 @@ jobs:
           MULTI_ARCH: true
           RELEASE: true
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
+          COMMIT_HASH: ${{ needs.assemble-deephaven-core.outputs.COMMIT_HASH }}
           TAG: ${{ github.event.inputs.image_tag }}
