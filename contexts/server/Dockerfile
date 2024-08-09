@@ -3,6 +3,7 @@
 ARG OPENJDK_VERSION
 ARG UBUNTU_VERSION
 ARG DEEPHAVEN_SOURCES
+ARG COMMIT_HASH
 
 # -------------------------------------
 
@@ -60,7 +61,8 @@ RUN \
 ENV \
     LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
-    LC_ALL='en_US.UTF-8'
+    LC_ALL='en_US.UTF-8' \
+    COMMIT_HASH=${COMMIT_HASH}
 LABEL \
     io.deephaven.server.ubuntu.version="${UBUNTU_VERSION}" \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
