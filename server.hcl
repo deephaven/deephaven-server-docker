@@ -47,6 +47,10 @@ variable "OPENJDK_VERSION" {
     default = "21"
 }
 
+variable "COMMIT_HASH" {
+    default = "not-set"
+}
+
 variable "PYTHON_VERSION" {
     default = "3.10"
 }
