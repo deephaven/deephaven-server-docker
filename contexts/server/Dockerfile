@@ -62,7 +62,7 @@ RUN \
 ENV \
     LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
-    LC_ALL='en_US.UTF-8' \
+    LC_ALL='en_US.UTF-8'
 LABEL \
     io.deephaven.server.ubuntu.version="${UBUNTU_VERSION}" \
     org.opencontainers.image.revision="${COMMIT_HASH}" \
