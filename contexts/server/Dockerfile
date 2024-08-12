@@ -63,9 +63,9 @@ ENV \
     LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
     LC_ALL='en_US.UTF-8' \
-    COMMIT_HASH=${COMMIT_HASH}
 LABEL \
     io.deephaven.server.ubuntu.version="${UBUNTU_VERSION}" \
+    org.opencontainers.image.revision="${COMMIT_HASH}" \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
     org.opencontainers.image.authors="developers@deephaven.io" \
