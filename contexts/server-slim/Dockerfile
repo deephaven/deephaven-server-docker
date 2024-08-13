@@ -3,6 +3,7 @@
 ARG OPENJDK_VERSION
 ARG UBUNTU_VERSION
 ARG DEEPHAVEN_SOURCES
+ARG COMMIT_HASH
 
 # -------------------------------------
 
@@ -40,6 +41,7 @@ FROM docker.io/ubuntu:${UBUNTU_VERSION} as os-bits
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG TARGETARCH
 ARG UBUNTU_VERSION
+ARG COMMIT_HASH
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
@@ -63,6 +65,7 @@ ENV \
     LC_ALL='en_US.UTF-8'
 LABEL \
     io.deephaven.server.ubuntu.version="${UBUNTU_VERSION}" \
+    org.opencontainers.image.revision="${COMMIT_HASH}" \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
     org.opencontainers.image.authors="developers@deephaven.io" \
