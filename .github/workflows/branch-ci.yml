@@ -20,13 +20,17 @@ jobs:
   assemble-deephaven-core:
     runs-on: ubuntu-24.04
     outputs:
-      commit-hash: ${{ steps.set-java-home.outputs.COMMIT_HASH }}
+      git-revision: ${{ steps.get-git-revision.outputs.GIT_REVISION }}
     steps:
       - name: Checkout deephaven-core
         uses: actions/checkout@v4
         with:
           repository: deephaven/deephaven-core
           ref: ${{ github.event.inputs.deephaven_core_ref }}
+
+      - name: Get GIT Revision
+        id: get-git-revision
+        run: echo "GIT_REVISION="$(git rev-parse HEAD) >> $GITHUB_OUTPUT
 
       - name: Setup JDK 11
         id: setup-java-11
@@ -36,10 +40,7 @@ jobs:
           java-version: '11'
 
       - name: Set JAVA_HOME
-        id: set-java-home
-        run: |
-          echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
-          echo "COMMIT_HASH="$(git rev-parse HEAD) >> $GITHUB_OUTPUT
+        run: echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
 
       - name: Setup gradle properties
         run: |
@@ -115,5 +116,5 @@ jobs:
           MULTI_ARCH: true
           RELEASE: true
           REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
-          COMMIT_HASH: ${{ needs.assemble-deephaven-core.outputs.commit-hash }}
+          GIT_REVISION: ${{ needs.assemble-deephaven-core.outputs.git-revision }}
           TAG: ${{ github.event.inputs.image_tag }}
