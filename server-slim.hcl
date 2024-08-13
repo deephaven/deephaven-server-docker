@@ -32,6 +32,10 @@ variable "OPENJDK_VERSION" {
     default = "21"
 }
 
+variable "COMMIT_HASH" {
+    default = "not-set"
+}
+
 variable "UBUNTU_VERSION" {
     default = "22.04"
 }
@@ -74,6 +78,7 @@ target "server-slim" {
     args = {
         DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
         OPENJDK_VERSION = OPENJDK_VERSION
+        COMMIT_HASH = COMMIT_HASH
         UBUNTU_VERSION = UBUNTU_VERSION
         GRPC_HEALTH_PROBE_VERSION = GRPC_HEALTH_PROBE_VERSION
         DEEPHAVEN_SOURCES = DEEPHAVEN_SOURCES
