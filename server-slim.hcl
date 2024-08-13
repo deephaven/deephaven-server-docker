@@ -32,7 +32,7 @@ variable "OPENJDK_VERSION" {
     default = "21"
 }
 
-variable "COMMIT_HASH" {
+variable "GIT_REVISION" {
     default = "not-set"
 }
 
@@ -78,7 +78,7 @@ target "server-slim" {
     args = {
         DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
         OPENJDK_VERSION = OPENJDK_VERSION
-        COMMIT_HASH = COMMIT_HASH
+        GIT_REVISION = GIT_REVISION
         UBUNTU_VERSION = UBUNTU_VERSION
         GRPC_HEALTH_PROBE_VERSION = GRPC_HEALTH_PROBE_VERSION
         DEEPHAVEN_SOURCES = DEEPHAVEN_SOURCES
