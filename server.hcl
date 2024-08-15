@@ -48,7 +48,7 @@ variable "OPENJDK_VERSION" {
 }
 
 variable "GIT_REVISION" {
-    default = "not-set"
+    default = ""
 }
 
 variable "PYTHON_VERSION" {
