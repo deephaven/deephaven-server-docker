@@ -18,6 +18,8 @@ RUN \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}"
 
 # -------------------------------------
 
@@ -29,6 +31,9 @@ RUN \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
+    org.opencontainers.image.revision="${GIT_REVISION}"
 
 # -------------------------------------
 
@@ -64,7 +69,6 @@ ENV \
     LC_ALL='en_US.UTF-8'
 LABEL \
     io.deephaven.server.ubuntu.version="${UBUNTU_VERSION}" \
-    org.opencontainers.image.revision="${GIT_REVISION}" \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
     org.opencontainers.image.authors="developers@deephaven.io" \
