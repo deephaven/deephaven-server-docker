@@ -18,8 +18,6 @@ RUN \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
-LABEL \
-    io.deephaven.server.version="${DEEPHAVEN_VERSION}"
 
 # -------------------------------------
 
@@ -31,8 +29,6 @@ RUN \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
-LABEL \
-    io.deephaven.server.version="${DEEPHAVEN_VERSION}"
 
 # -------------------------------------
 
