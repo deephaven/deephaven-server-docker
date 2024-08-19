@@ -158,7 +158,7 @@ LABEL \
 
 FROM openjdk-bits as deephaven-bits-custom
 ARG DEEPHAVEN_VERSION
-ARG GIT_VERSION
+ARG GIT_REVISION
 COPY --link --from=deephaven /opt/deephaven /opt/deephaven
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
