@@ -18,23 +18,17 @@ RUN \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
-LABEL \
-    io.deephaven.server.version="${DEEPHAVEN_VERSION}"
 
 # -------------------------------------
 
 FROM docker.io/library/busybox as deephaven-custom
 ARG DEEPHAVEN_VERSION
-ARG GIT_REVISION
 RUN \
     --mount=type=bind,source=server-jetty-${DEEPHAVEN_VERSION}.tar,target=server-jetty-${DEEPHAVEN_VERSION}.tar \
     set -eux; \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
-LABEL \
-    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
-    org.opencontainers.image.revision="${GIT_REVISION}"
 
 # -------------------------------------
 
@@ -90,11 +84,25 @@ LABEL \
 
 # -------------------------------------
 
-FROM openjdk-bits as deephaven-bits
+FROM openjdk-bits as deephaven-bits-released
 ARG DEEPHAVEN_VERSION
 COPY --link --from=deephaven /opt/deephaven /opt/deephaven
 LABEL \
     io.deephaven.server.version="${DEEPHAVEN_VERSION}"
+
+# -------------------------------------
+
+FROM openjdk-bits as deephaven-bits-custom
+ARG DEEPHAVEN_VERSION
+ARG GIT_REVISION
+COPY --link --from=deephaven /opt/deephaven /opt/deephaven
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
+    org.opencontainers.image.revision="${GIT_REVISION}"
+
+# -------------------------------------
+
+FROM deephaven-bits-${DEEPHAVEN_SOURCES} as deephaven-bits
 
 # -------------------------------------
 
