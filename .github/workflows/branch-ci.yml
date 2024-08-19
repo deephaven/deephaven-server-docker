@@ -112,6 +112,7 @@ jobs:
         env:
           DEEPHAVEN_SOURCES: custom
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
+          GIT_REVISION: ${{ needs.assemble-deephaven-core.outputs.git-revision }}
           DEEPHAVEN_CORE_WHEEL: ${{ steps.artifact_metadata.outputs.deephaven_core_wheel }}
           MULTI_ARCH: true
           RELEASE: true
