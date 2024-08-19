@@ -39,16 +39,16 @@ variable "DEEPHAVEN_VERSION" {
     default = "0.36.0"
 }
 
+variable "GIT_REVISION" {
+    default = ""
+}
+
 variable "DEEPHAVEN_CORE_WHEEL" {
     default = ""
 }
 
 variable "OPENJDK_VERSION" {
     default = "21"
-}
-
-variable "GIT_REVISION" {
-    default = ""
 }
 
 variable "PYTHON_VERSION" {
