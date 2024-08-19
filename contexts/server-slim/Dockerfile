@@ -18,17 +18,23 @@ RUN \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}"
 
 # -------------------------------------
 
 FROM docker.io/library/busybox as deephaven-custom
 ARG DEEPHAVEN_VERSION
+ARG GIT_REVISION
 RUN \
     --mount=type=bind,source=server-jetty-${DEEPHAVEN_VERSION}.tar,target=server-jetty-${DEEPHAVEN_VERSION}.tar \
     set -eux; \
     mkdir -p /opt/deephaven; \
     tar -xf server-jetty-${DEEPHAVEN_VERSION}.tar -C /opt/deephaven; \
     ln -s /opt/deephaven/server-jetty-${DEEPHAVEN_VERSION} /opt/deephaven/server-jetty
+LABEL \
+    io.deephaven.server.version="${DEEPHAVEN_VERSION}" \
+    org.opencontainers.image.revision="${GIT_REVISION}"
 
 # -------------------------------------
 
@@ -40,7 +46,6 @@ FROM docker.io/ubuntu:${UBUNTU_VERSION} as os-bits
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG TARGETARCH
 ARG UBUNTU_VERSION
-ARG GIT_REVISION
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
@@ -64,7 +69,6 @@ ENV \
     LC_ALL='en_US.UTF-8'
 LABEL \
     io.deephaven.server.ubuntu.version="${UBUNTU_VERSION}" \
-    org.opencontainers.image.revision="${GIT_REVISION}" \
     org.opencontainers.image.vendor="Deephaven Data Labs" \
     org.opencontainers.image.licenses="Deephaven Community License Agreement 1.0" \
     org.opencontainers.image.authors="developers@deephaven.io" \
