@@ -12,6 +12,7 @@ FROM docker.io/eclipse-temurin:${OPENJDK_VERSION} as openjdk
 
 FROM docker.io/library/busybox as deephaven-released
 ARG DEEPHAVEN_VERSION
+ARG GIT_REVISION
 ADD --link https://github.com/deephaven/deephaven-core/releases/download/v${DEEPHAVEN_VERSION}/server-jetty-${DEEPHAVEN_VERSION}.tar .
 RUN \
     set -eux; \
@@ -25,6 +26,7 @@ LABEL \
 
 FROM docker.io/library/busybox as deephaven-custom
 ARG DEEPHAVEN_VERSION
+ARG GIT_REVISION
 RUN \
     --mount=type=bind,source=server-jetty-${DEEPHAVEN_VERSION}.tar,target=server-jetty-${DEEPHAVEN_VERSION}.tar \
     set -eux; \
@@ -45,7 +47,6 @@ FROM docker.io/ubuntu:${UBUNTU_VERSION} as os-bits
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG TARGETARCH
 ARG UBUNTU_VERSION
-ARG GIT_REVISION
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-${TARGETARCH}-${UBUNTU_VERSION} \
