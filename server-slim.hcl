@@ -28,12 +28,12 @@ variable "DEEPHAVEN_VERSION" {
     default = "0.36.0"
 }
 
-variable "OPENJDK_VERSION" {
-    default = "21"
+variable "GIT_REVISION" {
+    default = ""
 }
 
-variable "GIT_REVISION" {
-    default = "not-set"
+variable "OPENJDK_VERSION" {
+    default = "21"
 }
 
 variable "UBUNTU_VERSION" {
@@ -77,8 +77,8 @@ target "server-slim" {
     ]
     args = {
         DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
-        OPENJDK_VERSION = OPENJDK_VERSION
         GIT_REVISION = GIT_REVISION
+        OPENJDK_VERSION = OPENJDK_VERSION
         UBUNTU_VERSION = UBUNTU_VERSION
         GRPC_HEALTH_PROBE_VERSION = GRPC_HEALTH_PROBE_VERSION
         DEEPHAVEN_SOURCES = DEEPHAVEN_SOURCES
