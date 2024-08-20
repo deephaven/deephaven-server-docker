@@ -39,6 +39,10 @@ variable "DEEPHAVEN_VERSION" {
     default = "0.36.0"
 }
 
+variable "GIT_REVISION" {
+    default = ""
+}
+
 variable "DEEPHAVEN_CORE_WHEEL" {
     default = ""
 }
@@ -169,6 +173,7 @@ target "server-context" {
     context = "contexts/server/"
     args = {
         DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
+        GIT_REVISION = GIT_REVISION
         DEEPHAVEN_CORE_WHEEL = DEEPHAVEN_CORE_WHEEL
         OPENJDK_VERSION = OPENJDK_VERSION
         PYTHON_VERSION = PYTHON_VERSION
