@@ -10,8 +10,7 @@ group "extra" {
         "server-nltk",
         "server-pytorch",
         "server-sklearn",
-        "server-tensorflow",
-        "server-ui"
+        "server-tensorflow"
     ]
 }
 
@@ -153,17 +152,6 @@ target "server-tensorflow" {
     ]
     args = {
         REQUIREMENTS_TYPE = "server-tensorflow"
-    }
-}
-
-target "server-ui" {
-    inherits = [ "server-context" ]
-    tags = [
-        "${REPO_PREFIX}${SERVER_PREFIX}-ui:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-ui:${DEEPHAVEN_VERSION}" : ""
-    ]
-    args = {
-        REQUIREMENTS_TYPE = "server-ui"
     }
 }
 

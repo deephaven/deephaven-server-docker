@@ -20,14 +20,14 @@ This will start the server, and the web UI will be available at [http://localhos
 
 The following server images are currently being produced:
 
-* `ghcr.io/deephaven/server:0.35.2`
-* `ghcr.io/deephaven/server-ui:0.35.2`
-* `ghcr.io/deephaven/server-slim:0.35.2`
-* `ghcr.io/deephaven/server-all-ai:0.35.2`
-* `ghcr.io/deephaven/server-nltk:0.35.2`
-* `ghcr.io/deephaven/server-pytorch:0.35.2`
-* `ghcr.io/deephaven/server-sklearn:0.35.2`
-* `ghcr.io/deephaven/server-tensorflow:0.35.2`
+- `ghcr.io/deephaven/server:0.35.2`
+- ~~`ghcr.io/deephaven/server-ui:0.35.2`~~ **Deprecated.** Use `ghcr.io/deephaven/server:0.35.2` instead.
+- `ghcr.io/deephaven/server-slim:0.35.2`
+- `ghcr.io/deephaven/server-all-ai:0.35.2`
+- `ghcr.io/deephaven/server-nltk:0.35.2`
+- `ghcr.io/deephaven/server-pytorch:0.35.2`
+- `ghcr.io/deephaven/server-sklearn:0.35.2`
+- `ghcr.io/deephaven/server-tensorflow:0.35.2`
 
 ### Linux
 
@@ -67,6 +67,6 @@ See [RELEASE](RELEASE.md).
 
 ## Resources
 
-* [Issues](https://github.com/deephaven/deephaven-server-docker/issues)
-* [Deephaven Community Slack](https://deephaven.io/slack)
-* [Deephaven Documentation](https://deephaven.io/core/docs/)
+- [Issues](https://github.com/deephaven/deephaven-server-docker/issues)
+- [Deephaven Community Slack](https://deephaven.io/slack)
+- [Deephaven Documentation](https://deephaven.io/core/docs/)

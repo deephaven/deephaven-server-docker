@@ -2,9 +2,9 @@ name: Release CI
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
-    branches: [ 'main', 'release/v*' ]
+    branches: ["main", "release/v*"]
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
 concurrency: release
@@ -32,7 +32,7 @@ jobs:
       - name: Bake
         uses: docker/bake-action@v5.7.0
         with:
-          targets: server,server-slim,server-all-ai,server-nltk,server-pytorch,server-sklearn,server-tensorflow,server-ui
+          targets: server,server-slim,server-all-ai,server-nltk,server-pytorch,server-sklearn,server-tensorflow
           files: server.hcl,server-slim.hcl
           pull: true
         env:

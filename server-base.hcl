@@ -4,8 +4,6 @@ group "default" {
     ]
 }
 
-# Note: server-ui is not applicable as a base image at this time as some of the plugins
-# explicitly depend on deephaven-core.
 group "extra" {
     targets = [
         "server-base-all-ai",
