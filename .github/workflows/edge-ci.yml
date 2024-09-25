@@ -18,11 +18,17 @@ jobs:
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
     runs-on: ubuntu-24.04
+    outputs:
+      git-revision: ${{ steps.get-git-revision.outputs.GIT_REVISION }}
     steps:
       - name: Checkout deephaven-core
         uses: actions/checkout@v4
         with:
           repository: deephaven/deephaven-core
+
+      - name: Get GIT Revision
+        id: get-git-revision
+        run: echo "GIT_REVISION="$(git rev-parse HEAD) >> $GITHUB_OUTPUT
 
       - name: Setup JDK 11
         id: setup-java-11
@@ -33,14 +39,14 @@ jobs:
 
       - name: Set JAVA_HOME
         run: echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
-
+        
       - name: Setup gradle properties
         run: |
           .github/scripts/gradle-properties.sh >> gradle.properties
           cat gradle.properties
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Assemble distribution
         run: ./gradlew outputVersion server-jetty-app:assemble py-server:assemble
@@ -97,7 +103,7 @@ jobs:
           cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
-        uses: docker/bake-action@v5.4.0
+        uses: docker/bake-action@v5.7.0
         with:
           targets: server,server-slim,server-base,server-slim-base,server-ui
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
@@ -105,6 +111,7 @@ jobs:
         env:
           DEEPHAVEN_SOURCES: custom
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
+          GIT_REVISION: ${{ needs.assemble-deephaven-core.outputs.git-revision }}
           DEEPHAVEN_CORE_WHEEL: ${{ steps.artifact_metadata.outputs.deephaven_core_wheel }}
           MULTI_ARCH: true
           RELEASE: ${{ github.event_name != 'pull_request' }}
