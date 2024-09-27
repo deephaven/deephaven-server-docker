@@ -91,7 +91,9 @@ target "server" {
     inherits = [ "server-context" ]
     tags = [
         "${REPO_PREFIX}${SERVER_PREFIX}:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${SERVER_PREFIX}-ui:${TAG}",
+        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}:${DEEPHAVEN_VERSION}" : "",
+        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-ui:${DEEPHAVEN_VERSION}" : "",
     ]
     args = {
         REQUIREMENTS_TYPE = "server"
