@@ -2,11 +2,11 @@ name: Edge CI
 
 on:
   schedule:
-    - cron:  '0 3 * * *'
+    - cron: "0 3 * * *"
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 # For maximum cache coherency, ensure only one outstanding build at any given time
@@ -14,7 +14,7 @@ concurrency: release
 
 jobs:
   assemble-deephaven-core:
-      # Forks don't need to run the scheduled cron
+    # Forks don't need to run the scheduled cron
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
     runs-on: ubuntu-24.04
@@ -34,12 +34,12 @@ jobs:
         id: setup-java-11
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: "temurin"
+          java-version: "11"
 
       - name: Set JAVA_HOME
         run: echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
-        
+
       - name: Setup gradle properties
         run: |
           .github/scripts/gradle-properties.sh >> gradle.properties
@@ -61,7 +61,7 @@ jobs:
           retention-days: 2
 
   bake-images:
-      # Forks don't need to run the scheduled cron
+    # Forks don't need to run the scheduled cron
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
     needs: assemble-deephaven-core
@@ -105,7 +105,7 @@ jobs:
       - name: Bake
         uses: docker/bake-action@v5.7.0
         with:
-          targets: server,server-slim,server-base,server-slim-base,server-ui
+          targets: server,server-slim,server-base,server-slim-base
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
           pull: true
         env:
