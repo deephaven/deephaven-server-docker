@@ -102,7 +102,7 @@ jobs:
           cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
-        uses: docker/bake-action@v5.7.0
+        uses: docker/bake-action@v5.9.0
         with:
           targets: ${{ github.event.inputs.bake_targets }}
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
