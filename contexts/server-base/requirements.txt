@@ -19,6 +19,7 @@ java-utilities
 
 # optional autocomplete feature
 jedi==0.19.1
+docstring_parser>=0.16
 
 # optional adbc feature
 adbc-driver-manager
