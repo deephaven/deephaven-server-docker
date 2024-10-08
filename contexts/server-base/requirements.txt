@@ -9,7 +9,7 @@ deephaven-plugin>=0.6.0
 numpy
 pandas>=1.5.0
 pyarrow
-numba; python_version < "3.12"
+numba; python_version < "3.13"
 
 # deephaven-core also expects wheel to be installed...
 wheel
