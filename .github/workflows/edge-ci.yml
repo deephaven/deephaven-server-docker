@@ -9,8 +9,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# For maximum cache coherency, ensure only one outstanding build at any given time
-concurrency: release
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   assemble-deephaven-core:

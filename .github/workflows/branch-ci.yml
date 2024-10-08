@@ -13,9 +13,6 @@ on:
         description: 'The bake target(s), comma separated. Please ask for assistance.'
         required: true
 
-# For maximum cache coherency, ensure only one outstanding build at any given time
-concurrency: release
-
 jobs:
   assemble-deephaven-core:
     runs-on: ubuntu-24.04
