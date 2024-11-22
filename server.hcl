@@ -60,7 +60,7 @@ variable "GRPC_HEALTH_PROBE_VERSION" {
 }
 
 variable "TAG" {
-    default = "latest"
+    default = "0.34.4"
 }
 
 variable "RELEASE" {
