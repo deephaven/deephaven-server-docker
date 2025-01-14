@@ -25,7 +25,7 @@ variable "DEEPHAVEN_SOURCES" {
 }
 
 variable "DEEPHAVEN_VERSION" {
-    default = "0.37.1"
+    default = "0.37.3"
 }
 
 variable "GIT_REVISION" {
