@@ -11,7 +11,7 @@ docker run \
     --rm \
     --name deephaven \
     -p 10000:10000 \
-    ghcr.io/deephaven/server:0.35.2
+    ghcr.io/deephaven/server:0.37.1
 ```
 
 This will start the server, and the web UI will be available at [http://localhost:10000](http://localhost:10000).
@@ -20,14 +20,14 @@ This will start the server, and the web UI will be available at [http://localhos
 
 The following server images are currently being produced:
 
-- `ghcr.io/deephaven/server:0.35.2`
-- `ghcr.io/deephaven/server-ui:0.35.2`
-- `ghcr.io/deephaven/server-slim:0.35.2`
-- `ghcr.io/deephaven/server-all-ai:0.35.2`
-- `ghcr.io/deephaven/server-nltk:0.35.2`
-- `ghcr.io/deephaven/server-pytorch:0.35.2`
-- `ghcr.io/deephaven/server-sklearn:0.35.2`
-- `ghcr.io/deephaven/server-tensorflow:0.35.2`
+- `ghcr.io/deephaven/server:0.37.1`
+- `ghcr.io/deephaven/server-ui:0.37.1`
+- `ghcr.io/deephaven/server-slim:0.37.1`
+- `ghcr.io/deephaven/server-all-ai:0.37.1`
+- `ghcr.io/deephaven/server-nltk:0.37.1`
+- `ghcr.io/deephaven/server-pytorch:0.37.1`
+- `ghcr.io/deephaven/server-sklearn:0.37.1`
+- `ghcr.io/deephaven/server-tensorflow:0.37.1`
 
 ### Linux
 
