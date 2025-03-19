@@ -2,34 +2,41 @@ name: Edge CI
 
 on:
   schedule:
-    - cron:  '0 3 * * *'
+    - cron: "0 3 * * *"
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
-# For maximum cache coherency, ensure only one outstanding build at any given time
-concurrency: release
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   assemble-deephaven-core:
-      # Forks don't need to run the scheduled cron
+    # Forks don't need to run the scheduled cron
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
+    outputs:
+      git-revision: ${{ steps.get-git-revision.outputs.GIT_REVISION }}
     steps:
       - name: Checkout deephaven-core
         uses: actions/checkout@v4
         with:
           repository: deephaven/deephaven-core
 
+      - name: Get GIT Revision
+        id: get-git-revision
+        run: echo "GIT_REVISION="$(git rev-parse HEAD) >> $GITHUB_OUTPUT
+
       - name: Setup JDK 11
         id: setup-java-11
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: "temurin"
+          java-version: "11"
 
       - name: Set JAVA_HOME
         run: echo "JAVA_HOME=${{ steps.setup-java-11.outputs.path }}" >> $GITHUB_ENV
@@ -40,7 +47,7 @@ jobs:
           cat gradle.properties
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Assemble distribution
         run: ./gradlew outputVersion server-jetty-app:assemble py-server:assemble
@@ -55,17 +62,19 @@ jobs:
           retention-days: 2
 
   bake-images:
-      # Forks don't need to run the scheduled cron
+    # Forks don't need to run the scheduled cron
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
     needs: assemble-deephaven-core
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+        with:
+          image: tonistiigi/binfmt:qemu-v7.0.0-28@sha256:66e11bea77a5ea9d6f0fe79b57cd2b189b5d15b93a2bdb925be22949232e4e55
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -97,14 +106,16 @@ jobs:
           cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
-        uses: docker/bake-action@v4.5.0
+        uses: docker/bake-action@v6.4.0
         with:
-          targets: server,server-slim,server-base,server-slim-base,server-ui
+          source: .
+          targets: server,server-slim,server-base,server-slim-base
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
           pull: true
         env:
           DEEPHAVEN_SOURCES: custom
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
+          GIT_REVISION: ${{ needs.assemble-deephaven-core.outputs.git-revision }}
           DEEPHAVEN_CORE_WHEEL: ${{ steps.artifact_metadata.outputs.deephaven_core_wheel }}
           MULTI_ARCH: true
           RELEASE: ${{ github.event_name != 'pull_request' }}

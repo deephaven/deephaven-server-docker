@@ -13,18 +13,21 @@ on:
         description: 'The bake target(s), comma separated. Please ask for assistance.'
         required: true
 
-# For maximum cache coherency, ensure only one outstanding build at any given time
-concurrency: release
-
 jobs:
   assemble-deephaven-core:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
+    outputs:
+      git-revision: ${{ steps.get-git-revision.outputs.GIT_REVISION }}
     steps:
       - name: Checkout deephaven-core
         uses: actions/checkout@v4
         with:
           repository: deephaven/deephaven-core
           ref: ${{ github.event.inputs.deephaven_core_ref }}
+
+      - name: Get GIT Revision
+        id: get-git-revision
+        run: echo "GIT_REVISION="$(git rev-parse HEAD) >> $GITHUB_OUTPUT
 
       - name: Setup JDK 11
         id: setup-java-11
@@ -42,7 +45,7 @@ jobs:
           cat gradle.properties
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Assemble distribution
         run: ./gradlew outputVersion server-jetty-app:assemble py-server:assemble
@@ -58,13 +61,15 @@ jobs:
 
   bake-images:
     needs: assemble-deephaven-core
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+        with:
+          image: tonistiigi/binfmt:qemu-v7.0.0-28@sha256:66e11bea77a5ea9d6f0fe79b57cd2b189b5d15b93a2bdb925be22949232e4e55
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -96,8 +101,9 @@ jobs:
           cp artifacts/server/jetty-app/build/distributions/server-jetty-${{ steps.artifact_metadata.outputs.deephaven_version }}.tar contexts/server-slim/
 
       - name: Bake
-        uses: docker/bake-action@v4.5.0
+        uses: docker/bake-action@v6.4.0
         with:
+          source: .
           targets: ${{ github.event.inputs.bake_targets }}
           files: server.hcl,server-slim.hcl,server-base.hcl,server-slim-base.hcl
           pull: true
@@ -106,6 +112,7 @@ jobs:
         env:
           DEEPHAVEN_SOURCES: custom
           DEEPHAVEN_VERSION: ${{ steps.artifact_metadata.outputs.deephaven_version }}
+          GIT_REVISION: ${{ needs.assemble-deephaven-core.outputs.git-revision }}
           DEEPHAVEN_CORE_WHEEL: ${{ steps.artifact_metadata.outputs.deephaven_core_wheel }}
           MULTI_ARCH: true
           RELEASE: true

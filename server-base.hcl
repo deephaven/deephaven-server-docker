@@ -4,8 +4,6 @@ group "default" {
     ]
 }
 
-# Note: server-ui is not applicable as a base image at this time as some of the plugins
-# explicitly depend on deephaven-core.
 group "extra" {
     targets = [
         "server-base-all-ai",
@@ -43,7 +41,7 @@ variable "UBUNTU_VERSION" {
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
-    default = "0.4.24"
+    default = "0.4.34"
 }
 
 variable "TAG" {
@@ -137,9 +135,6 @@ target "server-base-tensorflow" {
 
 target "server-base-context" {
     context = "contexts/server-base/"
-    contexts = {
-        turbodbc-wheel = "target:turbodbc-wheel"
-    }
     args = {
         OPENJDK_VERSION = OPENJDK_VERSION
         PYTHON_VERSION = PYTHON_VERSION
@@ -158,19 +153,6 @@ target "server-base-context" {
     ]
     output = [
         RELEASE ? "type=registry" : ""
-    ]
-}
-
-# -------------------------------------
-
-target "turbodbc-wheel" {
-    context = "contexts/turbodbc-wheel/"
-    args = {
-        PYTHON_VERSION = PYTHON_VERSION
-    }
-    platforms = [
-        MULTI_ARCH || RELEASE ? "linux/amd64" : "",
-        MULTI_ARCH || RELEASE ? "linux/arm64" : "",
     ]
 }
 

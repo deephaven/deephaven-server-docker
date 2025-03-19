@@ -25,7 +25,11 @@ variable "DEEPHAVEN_SOURCES" {
 }
 
 variable "DEEPHAVEN_VERSION" {
-    default = "0.34.3"
+    default = "0.37.5"
+}
+
+variable "GIT_REVISION" {
+    default = ""
 }
 
 variable "OPENJDK_VERSION" {
@@ -37,7 +41,7 @@ variable "UBUNTU_VERSION" {
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
-    default = "0.4.24"
+    default = "0.4.34"
 }
 
 variable "TAG" {
@@ -73,6 +77,7 @@ target "server-slim" {
     ]
     args = {
         DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
+        GIT_REVISION = GIT_REVISION
         OPENJDK_VERSION = OPENJDK_VERSION
         UBUNTU_VERSION = UBUNTU_VERSION
         GRPC_HEALTH_PROBE_VERSION = GRPC_HEALTH_PROBE_VERSION

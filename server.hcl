@@ -10,8 +10,7 @@ group "extra" {
         "server-nltk",
         "server-pytorch",
         "server-sklearn",
-        "server-tensorflow",
-        "server-ui"
+        "server-tensorflow"
     ]
 }
 
@@ -36,7 +35,11 @@ variable "DEEPHAVEN_SOURCES" {
 }
 
 variable "DEEPHAVEN_VERSION" {
-    default = "0.34.3"
+    default = "0.37.5"
+}
+
+variable "GIT_REVISION" {
+    default = ""
 }
 
 variable "DEEPHAVEN_CORE_WHEEL" {
@@ -56,7 +59,7 @@ variable "UBUNTU_VERSION" {
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
-    default = "0.4.24"
+    default = "0.4.34"
 }
 
 variable "TAG" {
@@ -88,7 +91,9 @@ target "server" {
     inherits = [ "server-context" ]
     tags = [
         "${REPO_PREFIX}${SERVER_PREFIX}:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}:${DEEPHAVEN_VERSION}" : ""
+        "${REPO_PREFIX}${SERVER_PREFIX}-ui:${TAG}",
+        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}:${DEEPHAVEN_VERSION}" : "",
+        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-ui:${DEEPHAVEN_VERSION}" : "",
     ]
     args = {
         REQUIREMENTS_TYPE = "server"
@@ -152,23 +157,13 @@ target "server-tensorflow" {
     }
 }
 
-target "server-ui" {
-    inherits = [ "server-context" ]
-    tags = [
-        "${REPO_PREFIX}${SERVER_PREFIX}-ui:${TAG}",
-        equal("latest", TAG) ? "${REPO_PREFIX}${SERVER_PREFIX}-ui:${DEEPHAVEN_VERSION}" : ""
-    ]
-    args = {
-        REQUIREMENTS_TYPE = "server-ui"
-    }
-}
-
 # -------------------------------------
 
 target "server-context" {
     context = "contexts/server/"
     args = {
         DEEPHAVEN_VERSION = DEEPHAVEN_VERSION
+        GIT_REVISION = GIT_REVISION
         DEEPHAVEN_CORE_WHEEL = DEEPHAVEN_CORE_WHEEL
         OPENJDK_VERSION = OPENJDK_VERSION
         PYTHON_VERSION = PYTHON_VERSION
