@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bake
-        uses: docker/bake-action@v6.4.0
+        uses: docker/bake-action@v6
         with:
           targets: server,server-slim
           files: server.hcl,server-slim.hcl
