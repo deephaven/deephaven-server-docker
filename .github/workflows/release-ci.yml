@@ -32,7 +32,7 @@ jobs:
       - name: Bake
         uses: docker/bake-action@v6
         with:
-          targets: server,server-slim
+          targets: server,server-slim,server-all-ai,server-nltk,server-pytorch,server-sklearn,server-tensorflow
           files: server.hcl,server-slim.hcl
           pull: true
         env:
