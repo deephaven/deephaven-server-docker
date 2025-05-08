@@ -57,7 +57,7 @@ $ docker run --rm --name deephaven -p 10000:10000 ghcr.io/deephaven/server:X.Y.Z
 Verify that the latest version, which may not be `X.Y.Z`, is correct in the `latest` image.
 
 ```shell
-$ docker run --rm --name deephaven -p 10000:10000 ghcr.io/deephaven/server:latest
+$ docker run --pull=always --rm --name deephaven -p 10000:10000 ghcr.io/deephaven/server:latest
 ```
 
 The docker image release process is more forgiving than releasing jar artifacts.
