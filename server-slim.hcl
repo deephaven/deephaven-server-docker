@@ -37,7 +37,7 @@ variable "OPENJDK_VERSION" {
 }
 
 variable "UBUNTU_VERSION" {
-    default = "22.04"
+    default = "24.04"
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
