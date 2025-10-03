@@ -4,7 +4,7 @@
 # These are dependencies of deephaven-core[autocomplete], not including deephaven-core.
 #
 # See https://github.com/deephaven/deephaven-core/blob/main/py/server/setup.py
-jpy>=1.1.0
+jpy>=1.2.0
 deephaven-plugin>=0.6.0
 numpy
 pandas>=1.5.0
