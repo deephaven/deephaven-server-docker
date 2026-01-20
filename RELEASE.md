@@ -54,12 +54,16 @@ If all is green, you should be able to test the new release:
 ```shell
 $ docker run --rm --name deephaven -p 10000:10000 ghcr.io/deephaven/server:X.Y.Z
 ```
+Verify that the latest version, which may not be `X.Y.Z`, is correct in the `latest` image.
+
+```shell
+$ docker run --pull=always --rm --name deephaven -p 10000:10000 ghcr.io/deephaven/server:latest
+```
 
 The docker image release process is more forgiving than releasing jar artifacts.
 If something goes wrong during this stage, it can easily be corrected.
 
 ### 3. Merge release branch to main
-
 
 During a normal release, follow-up with a fast-forward merge of `release/vX.Y.Z` into `main`.
 
@@ -77,7 +81,9 @@ Typically, the fast-forward be successful during a normal release since the rele
 In cases where that's not true, there's a good chance that care may be needed to ensure any merge conflicts are handled appropriately.
 
 In the case of a patch release, the branch may, or may not, be fast-forwardable.
-Use care, and ensure any merge conflicts are handled appropriately before pushing:
+Use care, and ensure any merge conflicts are handled appropriately before pushing.
+
+> :warning: If the release is a patch on an older release (i.e. not the latest), skip the following section.
 
 ```shell
 $ git checkout main
