@@ -1,2 +1,7 @@
 *.tar
 *.whl
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
