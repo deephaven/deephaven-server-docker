@@ -9,7 +9,6 @@ deephaven-plugin>=0.8.0
 numpy
 pandas>=1.5.0
 pyarrow
-numba; python_version < "3.13"
 
 # deephaven-core also expects wheel to be installed...
 wheel
@@ -27,3 +26,6 @@ adbc-driver-postgresql
 
 # optional connectorx feature for x86_64 arch only, no Linux/arm64 wheel yet
 connectorx; platform.machine == 'x86_64'
+
+# optional numba feature
+numba>=0.68.0
