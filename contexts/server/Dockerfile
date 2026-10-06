@@ -97,12 +97,13 @@ ARG REQUIREMENTS_TYPE
 ARG DEEPHAVEN_VERSION
 RUN \
     --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements.txt \
+    --mount=type=bind,source=requirements-optional.txt,target=requirements-optional.txt \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     mkdir -p /opt/deephaven; \
     python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
     /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
-    /opt/deephaven/venv/bin/pip install --only-binary=:all: "deephaven-core[autocomplete]==${DEEPHAVEN_VERSION}" "numba>=0.68.0" -r requirements.txt
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: "deephaven-core[autocomplete]==${DEEPHAVEN_VERSION}" -r requirements.txt -r requirements-optional.txt
 ENV \
     VIRTUAL_ENV="/opt/deephaven/venv" \
     PATH="/opt/deephaven/venv/bin:${PATH}"
@@ -118,12 +119,13 @@ ARG DEEPHAVEN_CORE_WHEEL
 RUN \
     --mount=type=bind,source=${DEEPHAVEN_CORE_WHEEL},target=${DEEPHAVEN_CORE_WHEEL} \
     --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements.txt \
+    --mount=type=bind,source=requirements-optional.txt,target=requirements-optional.txt \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     mkdir -p /opt/deephaven; \
     python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
     /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
-    /opt/deephaven/venv/bin/pip install --only-binary=:all: "${DEEPHAVEN_CORE_WHEEL}[autocomplete]" "numba>=0.68.0" -r requirements.txt
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: "${DEEPHAVEN_CORE_WHEEL}[autocomplete]" -r requirements.txt -r requirements-optional.txt
 ENV \
     VIRTUAL_ENV="/opt/deephaven/venv" \
     PATH="/opt/deephaven/venv/bin:${PATH}"

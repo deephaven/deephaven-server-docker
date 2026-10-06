@@ -19,13 +19,3 @@ java-utilities
 # optional autocomplete feature
 jedi==0.19.1
 docstring_parser>=0.16
-
-# optional adbc feature
-adbc-driver-manager
-adbc-driver-postgresql
-
-# optional connectorx feature for x86_64 arch only, no Linux/arm64 wheel yet
-connectorx; platform.machine == 'x86_64'
-
-# optional numba feature
-numba>=0.68.0

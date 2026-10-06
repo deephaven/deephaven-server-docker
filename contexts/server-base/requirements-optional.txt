@@ -1,0 +1,11 @@
+# Optional features of deephaven-core that its setup.py does not install.
+
+# optional adbc feature
+adbc-driver-manager
+adbc-driver-postgresql
+
+# optional connectorx feature for x86_64 arch only, no Linux/arm64 wheel yet
+connectorx; platform.machine == 'x86_64'
+
+# optional numba feature
+numba>=0.68.0
