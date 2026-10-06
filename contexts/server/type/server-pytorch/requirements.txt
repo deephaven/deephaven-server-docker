@@ -1,4 +1,2 @@
 torch
 tensorboard
-# optional numba feature
-numba>=0.68.0
