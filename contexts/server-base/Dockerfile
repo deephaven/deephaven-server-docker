@@ -87,12 +87,13 @@ ARG REQUIREMENTS_TYPE
 RUN \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     --mount=type=bind,source=type/${REQUIREMENTS_TYPE}/requirements.txt,target=requirements-2.txt \
+    --mount=type=bind,source=requirements-optional.txt,target=requirements-optional.txt \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     set -eux; \
     mkdir -p /opt/deephaven; \
     python${PYTHON_VERSION} -m venv /opt/deephaven/venv; \
     /opt/deephaven/venv/bin/pip install --upgrade pip setuptools; \
-    /opt/deephaven/venv/bin/pip install --only-binary=:all: --find-links /wheels -r requirements.txt -r requirements-2.txt
+    /opt/deephaven/venv/bin/pip install --only-binary=:all: --find-links /wheels -r requirements.txt -r requirements-2.txt -r requirements-optional.txt
 ENV \
     VIRTUAL_ENV="/opt/deephaven/venv" \
     PATH="/opt/deephaven/venv/bin:${PATH}"
