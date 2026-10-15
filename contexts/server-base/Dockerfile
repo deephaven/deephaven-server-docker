@@ -50,17 +50,37 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 ARG PYTHON_VERSION
+# "ubuntu" installs python from the Ubuntu archive; "deadsnakes" additionally enables
+# https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa for versions Ubuntu doesn't ship.
+ARG PYTHON_SOURCE="ubuntu"
 RUN \
+    --mount=type=bind,source=deadsnakes.asc,target=/tmp/deadsnakes.asc \
     --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache-${TARGETARCH}-${UBUNTU_VERSION} \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib-${TARGETARCH}-${UBUNTU_VERSION} \
     set -eux; \
+    case "${PYTHON_SOURCE}" in \
+        ubuntu) ;; \
+        deadsnakes) \
+            install -D -m 644 /tmp/deadsnakes.asc /etc/apt/keyrings/deadsnakes.asc; \
+            . /etc/os-release; \
+            printf '%s\n' \
+                'Types: deb' \
+                'URIs: https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu' \
+                "Suites: ${VERSION_CODENAME}" \
+                'Components: main' \
+                'Signed-By: /etc/apt/keyrings/deadsnakes.asc' \
+                > /etc/apt/sources.list.d/deadsnakes.sources; \
+            ;; \
+        *) echo "Unknown PYTHON_SOURCE: ${PYTHON_SOURCE}" >&2; exit 1 ;; \
+    esac; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
         libpython${PYTHON_VERSION} \
         python${PYTHON_VERSION} \
         python${PYTHON_VERSION}-venv
 LABEL \
-    io.deephaven.server.python.version="${PYTHON_VERSION}"
+    io.deephaven.server.python.version="${PYTHON_VERSION}" \
+    io.deephaven.server.python.source="${PYTHON_SOURCE}"
 
 # -------------------------------------
 
