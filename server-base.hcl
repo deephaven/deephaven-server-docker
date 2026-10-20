@@ -133,6 +133,50 @@ target "server-base-tensorflow" {
 
 # -------------------------------------
 
+// Experimental: server-base images for a range of python versions, each on the newest Ubuntu
+// LTS where it can be installed. Ubuntu 26.04 ships only python 3.14; the others come from the
+// deadsnakes PPA, which publishes amd64 and arm64 builds for Ubuntu LTS releases.
+//
+//   docker buildx bake -f server-base.hcl python
+//   docker buildx bake -f server-base.hcl server-base-python313
+
+group "python" {
+    targets = [
+        "server-base-python39",
+        "server-base-python310",
+        "server-base-python311",
+        "server-base-python312",
+        "server-base-python313",
+        "server-base-python314"
+    ]
+}
+
+target "server-base-python" {
+    name = "server-base-python${replace(item.python, ".", "")}"
+    matrix = {
+        item = [
+            { python = "3.9",  ubuntu = "26.04", source = "deadsnakes" },
+            { python = "3.10", ubuntu = "26.04", source = "deadsnakes" },
+            { python = "3.11", ubuntu = "26.04", source = "deadsnakes" },
+            { python = "3.12", ubuntu = "26.04", source = "deadsnakes" },
+            { python = "3.13", ubuntu = "26.04", source = "deadsnakes" },
+            { python = "3.14", ubuntu = "26.04", source = "ubuntu" },
+        ]
+    }
+    inherits = [ "server-base-context" ]
+    tags = [
+        "${REPO_PREFIX}${SERVER_BASE_PREFIX}-python${item.python}:${TAG}"
+    ]
+    args = {
+        REQUIREMENTS_TYPE = "server"
+        PYTHON_VERSION = item.python
+        PYTHON_SOURCE = item.source
+        UBUNTU_VERSION = item.ubuntu
+    }
+}
+
+# -------------------------------------
+
 target "server-base-context" {
     context = "contexts/server-base/"
     args = {
