@@ -19,7 +19,7 @@ variable "CACHE_PREFIX" {
 }
 
 variable "OPENJDK_VERSION" {
-    default = "21"
+    default = "25"
 }
 
 variable "UBUNTU_VERSION" {
