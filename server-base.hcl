@@ -37,7 +37,7 @@ variable "PYTHON_VERSION" {
 }
 
 variable "UBUNTU_VERSION" {
-    default = "24.04"
+    default = "26.04"
 }
 
 variable "GRPC_HEALTH_PROBE_VERSION" {
