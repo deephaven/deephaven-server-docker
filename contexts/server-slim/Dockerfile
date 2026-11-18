@@ -6,7 +6,14 @@ ARG DEEPHAVEN_SOURCES
 
 # -------------------------------------
 
-FROM docker.io/eclipse-temurin:${OPENJDK_VERSION} as openjdk
+FROM docker.io/library/azul-zulu:${OPENJDK_VERSION} as openjdk
+# The Azul Zulu JDK lives in an architecture-specific directory (e.g. /usr/lib/jvm/zulu25-ca-amd64),
+# so move it to a stable, architecture-independent location for copying into the final image.
+RUN \
+    set -eux; \
+    mkdir -p /opt/java; \
+    mv "$(readlink -f "${JAVA_HOME}")" /opt/java/openjdk; \
+    /opt/java/openjdk/bin/java -version
 
 # -------------------------------------
 
@@ -80,7 +87,7 @@ ENV \
     PATH="/opt/java/openjdk/bin:${PATH}"
 LABEL \
     io.deephaven.server.java.version="${OPENJDK_VERSION}" \
-    io.deephaven.server.java.base.name="docker.io/eclipse-temurin:${OPENJDK_VERSION}"
+    io.deephaven.server.java.base.name="docker.io/library/azul-zulu:${OPENJDK_VERSION}"
 
 # -------------------------------------
 
