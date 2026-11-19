@@ -6,7 +6,7 @@ ARG DEEPHAVEN_SOURCES
 
 # -------------------------------------
 
-FROM docker.io/eclipse-temurin:${OPENJDK_VERSION} as openjdk
+FROM docker.io/library/amazoncorretto:${OPENJDK_VERSION} as openjdk
 
 # -------------------------------------
 
@@ -74,13 +74,16 @@ LABEL \
 
 FROM os-bits as openjdk-bits
 ARG OPENJDK_VERSION
-COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
+# Corretto installs into an arch-specific directory (e.g. java-25-amazon-corretto.x86_64); its other /usr/lib/jvm
+# entries, including the image's JAVA_HOME, are symlinks through /etc/alternatives. The wildcard matches only that
+# directory, and COPY puts its contents into /opt/java/openjdk.
+COPY --link --from=openjdk /usr/lib/jvm/java-*-amazon-corretto.* /opt/java/openjdk/
 ENV \
     JAVA_HOME="/opt/java/openjdk" \
     PATH="/opt/java/openjdk/bin:${PATH}"
 LABEL \
     io.deephaven.server.java.version="${OPENJDK_VERSION}" \
-    io.deephaven.server.java.base.name="docker.io/eclipse-temurin:${OPENJDK_VERSION}"
+    io.deephaven.server.java.base.name="docker.io/library/amazoncorretto:${OPENJDK_VERSION}"
 
 # -------------------------------------
 
