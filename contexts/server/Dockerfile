@@ -6,14 +6,20 @@ ARG DEEPHAVEN_SOURCES
 
 # -------------------------------------
 
-FROM docker.io/library/azul-zulu:${OPENJDK_VERSION} as openjdk
+FROM docker.io/library/amazoncorretto:${OPENJDK_VERSION} as openjdk
 ARG OPENJDK_VERSION
-# Safety check: the final image hard-codes JAVA_HOME as /usr/lib/jvm/zulu${OPENJDK_VERSION}, so fail the
-# build if the azul-zulu image doesn't provide that same JAVA_HOME (and a working JDK there).
+# Safety check: the final image hard-codes JAVA_HOME as /usr/lib/jvm/java-${OPENJDK_VERSION}-amazon-corretto, so fail
+# the build if the amazoncorretto image doesn't provide that same JAVA_HOME (and a working JDK there).
+# Corretto's JAVA_HOME is a symlink into /etc/alternatives, which points at an arch-specific directory
+# (e.g. java-25-amazon-corretto.x86_64). Replace it with a direct relative symlink so that copying just
+# /usr/lib/jvm yields a working JDK.
 RUN \
     set -eux; \
-    expected="/usr/lib/jvm/zulu${OPENJDK_VERSION}"; \
+    expected="/usr/lib/jvm/java-${OPENJDK_VERSION}-amazon-corretto"; \
     [ "${JAVA_HOME}" = "${expected}" ] || { echo "Unexpected JAVA_HOME='${JAVA_HOME}', expected '${expected}'" >&2; exit 1; }; \
+    real="$(readlink -f "${expected}")"; \
+    rm "${expected}"; \
+    ln -s "$(basename "${real}")" "${expected}"; \
     "${expected}/bin/java" -version
 
 # -------------------------------------
@@ -144,15 +150,15 @@ LABEL \
 
 FROM venv-bits-${DEEPHAVEN_SOURCES} as openjdk-bits
 ARG OPENJDK_VERSION
-# Zulu installs into an arch-specific directory plus a version symlink (e.g. zulu25 -> zulu25-ca-amd64);
-# copy the whole directory to keep both, and use the same JAVA_HOME as the azul-zulu image.
+# Corretto installs into an arch-specific directory plus a version symlink (see the openjdk stage);
+# copy the whole directory to keep both, and use the same JAVA_HOME as the amazoncorretto image.
 COPY --link --from=openjdk /usr/lib/jvm /usr/lib/jvm
 ENV \
-    JAVA_HOME="/usr/lib/jvm/zulu${OPENJDK_VERSION}" \
-    PATH="/usr/lib/jvm/zulu${OPENJDK_VERSION}/bin:${PATH}"
+    JAVA_HOME="/usr/lib/jvm/java-${OPENJDK_VERSION}-amazon-corretto" \
+    PATH="/usr/lib/jvm/java-${OPENJDK_VERSION}-amazon-corretto/bin:${PATH}"
 LABEL \
     io.deephaven.server.java.version="${OPENJDK_VERSION}" \
-    io.deephaven.server.java.base.name="docker.io/library/azul-zulu:${OPENJDK_VERSION}"
+    io.deephaven.server.java.base.name="docker.io/library/amazoncorretto:${OPENJDK_VERSION}"
 
 # -------------------------------------
 
