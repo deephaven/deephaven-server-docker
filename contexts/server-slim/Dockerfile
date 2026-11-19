@@ -6,7 +6,12 @@ ARG DEEPHAVEN_SOURCES
 
 # -------------------------------------
 
-FROM docker.io/eclipse-temurin:${OPENJDK_VERSION} as openjdk
+FROM scratch as adoptium-index
+ARG TARGETARCH
+ARG UBUNTU_CODENAME
+# The JDK install in openjdk-bits mounts this index, so its cached layer is rebuilt whenever Adoptium publishes a
+# package for this distribution and architecture.
+ADD https://packages.adoptium.net/artifactory/deb/dists/${UBUNTU_CODENAME}/main/binary-${TARGETARCH}/Packages /Packages
 
 # -------------------------------------
 
@@ -73,14 +78,36 @@ LABEL \
 # -------------------------------------
 
 FROM os-bits as openjdk-bits
+ARG DEBIAN_FRONTEND="noninteractive"
 ARG OPENJDK_VERSION
-COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
+ARG TARGETARCH
+ARG UBUNTU_CODENAME
+ARG UBUNTU_VERSION
+ADD --link --chmod=644 https://packages.adoptium.net/artifactory/api/gpg/key/public /etc/apt/keyrings/adoptium.asc
+RUN \
+    --mount=type=bind,from=adoptium-index,source=/Packages,target=/tmp/adoptium-Packages \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache-${TARGETARCH}-${UBUNTU_VERSION} \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib-${TARGETARCH}-${UBUNTU_VERSION} \
+    set -eux; \
+    # adoptium-index fetched the index for UBUNTU_CODENAME, which must name this image's distribution; os-release is
+    # read in a subshell because it also defines UBUNTU_CODENAME
+    codename="$(. /etc/os-release && echo "${VERSION_CODENAME}")"; \
+    test "${codename}" = "${UBUNTU_CODENAME}"; \
+    echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb ${codename} main" \
+        > /etc/apt/sources.list.d/adoptium.list; \
+    apt-get -qq update; \
+    apt-get -qq -y --no-install-recommends install temurin-${OPENJDK_VERSION}-jdk; \
+    # the JDK sources, which the eclipse-temurin images also omit
+    rm -f /usr/lib/jvm/temurin-${OPENJDK_VERSION}-jdk-${TARGETARCH}/lib/src.zip; \
+    mkdir -p /opt/java; \
+    ln -s /usr/lib/jvm/temurin-${OPENJDK_VERSION}-jdk-${TARGETARCH} /opt/java/openjdk; \
+    /opt/java/openjdk/bin/java -version
 ENV \
     JAVA_HOME="/opt/java/openjdk" \
     PATH="/opt/java/openjdk/bin:${PATH}"
 LABEL \
     io.deephaven.server.java.version="${OPENJDK_VERSION}" \
-    io.deephaven.server.java.base.name="docker.io/eclipse-temurin:${OPENJDK_VERSION}"
+    io.deephaven.server.java.base.name="https://packages.adoptium.net/artifactory/deb temurin-${OPENJDK_VERSION}-jdk"
 
 # -------------------------------------
 

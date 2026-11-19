@@ -40,6 +40,11 @@ variable "UBUNTU_VERSION" {
     default = "26.04"
 }
 
+// The codename of UBUNTU_VERSION, which names its distribution in the Adoptium apt repository
+variable "UBUNTU_CODENAME" {
+    default = "resolute"
+}
+
 variable "GRPC_HEALTH_PROBE_VERSION" {
     default = "0.4.62"
 }
@@ -80,6 +85,7 @@ target "server-slim" {
         GIT_REVISION = GIT_REVISION
         OPENJDK_VERSION = OPENJDK_VERSION
         UBUNTU_VERSION = UBUNTU_VERSION
+        UBUNTU_CODENAME = UBUNTU_CODENAME
         GRPC_HEALTH_PROBE_VERSION = GRPC_HEALTH_PROBE_VERSION
         DEEPHAVEN_SOURCES = DEEPHAVEN_SOURCES
     }
