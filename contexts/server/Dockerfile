@@ -6,7 +6,15 @@ ARG DEEPHAVEN_SOURCES
 
 # -------------------------------------
 
-FROM docker.io/eclipse-temurin:${OPENJDK_VERSION} as openjdk
+FROM docker.io/library/azul-zulu:${OPENJDK_VERSION} as openjdk
+ARG OPENJDK_VERSION
+# Safety check: the final image hard-codes JAVA_HOME as /usr/lib/jvm/zulu${OPENJDK_VERSION}, so fail the
+# build if the azul-zulu image doesn't provide that same JAVA_HOME (and a working JDK there).
+RUN \
+    set -eux; \
+    expected="/usr/lib/jvm/zulu${OPENJDK_VERSION}"; \
+    [ "${JAVA_HOME}" = "${expected}" ] || { echo "Unexpected JAVA_HOME='${JAVA_HOME}', expected '${expected}'" >&2; exit 1; }; \
+    "${expected}/bin/java" -version
 
 # -------------------------------------
 
@@ -136,13 +144,15 @@ LABEL \
 
 FROM venv-bits-${DEEPHAVEN_SOURCES} as openjdk-bits
 ARG OPENJDK_VERSION
-COPY --link --from=openjdk /opt/java/openjdk /opt/java/openjdk
+# Zulu installs into an arch-specific directory plus a version symlink (e.g. zulu25 -> zulu25-ca-amd64);
+# copy the whole directory to keep both, and use the same JAVA_HOME as the azul-zulu image.
+COPY --link --from=openjdk /usr/lib/jvm /usr/lib/jvm
 ENV \
-    JAVA_HOME="/opt/java/openjdk" \
-    PATH="/opt/java/openjdk/bin:${PATH}"
+    JAVA_HOME="/usr/lib/jvm/zulu${OPENJDK_VERSION}" \
+    PATH="/usr/lib/jvm/zulu${OPENJDK_VERSION}/bin:${PATH}"
 LABEL \
     io.deephaven.server.java.version="${OPENJDK_VERSION}" \
-    io.deephaven.server.java.base.name="docker.io/eclipse-temurin:${OPENJDK_VERSION}"
+    io.deephaven.server.java.base.name="docker.io/library/azul-zulu:${OPENJDK_VERSION}"
 
 # -------------------------------------
 
