@@ -11,8 +11,8 @@ ARG OPENJDK_VERSION
 # the build if the amazoncorretto image doesn't provide that same JAVA_HOME (and a working JDK there).
 # Corretto's JAVA_HOME is a symlink into /etc/alternatives, which points at an arch-specific directory
 # (e.g. java-25-amazon-corretto.x86_64). Replace it with a direct relative symlink so that copying just
-# /usr/lib/jvm yields a working JDK, and remove every other entry (the rest are symlinks into
-# /etc/alternatives that would dangle) so only JAVA_HOME and its target are copied.
+# /usr/lib/jvm yields a working JDK, and remove every other symlink (they point into
+# /etc/alternatives and would dangle) so only JAVA_HOME and its target are copied.
 RUN \
     set -eux; \
     expected="/usr/lib/jvm/java-${OPENJDK_VERSION}-amazon-corretto"; \
@@ -21,7 +21,7 @@ RUN \
     rm "${expected}"; \
     ln -s "$(basename "${real}")" "${expected}"; \
     for entry in /usr/lib/jvm/*; do \
-        case "${entry}" in "${expected}" | "${real}") ;; *) rm -rf "${entry}" ;; esac; \
+        if [ -L "${entry}" ] && [ "${entry}" != "${expected}" ]; then rm "${entry}"; fi; \
     done; \
     "${expected}/bin/java" -version
 
