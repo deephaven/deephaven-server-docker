@@ -7,6 +7,14 @@ ARG DEEPHAVEN_SOURCES
 # -------------------------------------
 
 FROM docker.io/library/azul-zulu:${OPENJDK_VERSION} as openjdk
+ARG OPENJDK_VERSION
+# Safety check: the final image hard-codes JAVA_HOME as /usr/lib/jvm/zulu${OPENJDK_VERSION}, so fail the
+# build if the azul-zulu image doesn't provide that same JAVA_HOME (and a working JDK there).
+RUN \
+    set -eux; \
+    expected="/usr/lib/jvm/zulu${OPENJDK_VERSION}"; \
+    [ "${JAVA_HOME}" = "${expected}" ] || { echo "Unexpected JAVA_HOME='${JAVA_HOME}', expected '${expected}'" >&2; exit 1; }; \
+    "${expected}/bin/java" -version
 
 # -------------------------------------
 
